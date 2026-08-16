@@ -1,0 +1,568 @@
+# Reminder for you:
+# You must setup this config before using the A.P.V.E. Not configuring this config can lead to false punishments and message-blockings. Also, configure the punishment command syntax for your punishment plugin if you want avoid crashs!!!
+
+# For russian administrators:
+# Normalizer converts any cyrilic symbols into latin alphabet. Consequently, the addition of new banned words must be fully in latin alphabet like (шлюха --> shlyuha).
+# Full normalization documentation you can see in documentation.txt
+
+
+thresholds:
+  high: 0.75   
+  medium: 0.50   
+
+# 1. Insult words
+insult-words:
+  # Russian (Translit)
+  - "eblan"
+  - "eblanische"
+  - "eblanka"
+  - "dolboeb"
+  - "dolboebina"
+  - "dolboyascher"
+  - "ebanat"
+  - "ebanashka"
+  - "ebanatik"
+  - "hueplet"
+  - "huesos"
+  - "hueglot"
+  - "hueputalo"
+  - "huenosec"
+  - "huevat"
+  - "huedrysch"
+  - "pizdabol"
+  - "pizdabolka"
+  - "pizdaliz"
+  - "blyadina"
+  - "blyadun"
+  - "blyadota"
+  - "gandon"
+  - "ochkoshnik"
+  - "gandonische"
+  - "mudak"
+  - "mudila"
+  - "pidor"
+  - "pidoras"
+  - "pidrenok"
+  - "pidrila"
+  - "pidrische"
+  - "pidorazina"
+  - "mrazb"
+  - "ueban"
+  - "ebenb"
+  - "mrazota"
+  - "otrodbe"
+  - "manda"
+  - "vyblyadok"
+  - "shlyuha"       
+  - "shlyushka"   
+  - "shalava"       
+  - "shmara"        
+  - "potaskuha"     
+  - "potaskushka"  
+  - "davalka"      
+  - "podstilka"    
+  - "prostitutka"     
+  - "suchka"       
+  - "tvarb"       
+  - "paskuda"
+  - "sirota"
+  - "bezmamysh"
+  - "vyblyadok" 
+  - "ebut"
+  - "ebatb"
+  - "ebem"
+  - "trahaem"
+  - "trahnuli"
+  - "trahnul"
+  - "trahatsa"
+  - "vyebali"
+  - "vyebal"
+  - "vyebal" 
+  # English
+  - "bastard"
+  - "bitch"
+  - "asshole"
+  - "dickhead"
+  - "retard"
+  - "cunt"
+  - "loser"
+  - "dumbass"
+  - "idiot"
+  - "wanker"
+  - "twat"
+  - "dipshit"
+  - "moron"
+  - "prick"
+  - "imbecile"
+  - "scumbag"
+  - "douchebag"
+
+# 1.1. Family insult words
+family-insult-words:
+  # Russian (Translit)
+  - "mamu"
+  - "mame"
+  - "mamul"
+  - "matb"
+  - "macheha"
+  - "otca"
+  - "batya"
+  - "bate"
+  - "opekun"
+  - "opeka"
+  - "rodnyu"
+  - "roditeley"
+  - "roditelyam"
+  - "mamka"       
+  - "mamasha"     
+  - "mamochka"     
+  - "matushka"     
+  - "mamulya"      
+  - "maman"   
+  - "mama" 
+  - "mamy"       
+  - "papa"     
+  - "papu"      
+  - "pape"      
+  - "otets"    
+  - "otcu"    
+  - "otcom"    
+  - "babushka"    
+  - "dedushka"
+  - "doch"       
+  - "dochka"   
+  - "dochenka"   
+  - "sestra"      
+  - "sestru"    
+  - "brata"       
+  # English
+  - "motherfucker"
+  - "milf"
+  - "mother"
+  - "mom"
+  - "mum"
+  - "father"
+  - "dad"
+  - "parents"
+  - "orphan"
+
+family-roots:
+  - "mam"   
+  - "matb"   
+  - "otc"       
+  - "bat"    
+  - "roditel"  
+  - "pap"
+  - "opek"      
+  - "mother"
+  - "father"
+  - "parent"
+  - "mom"
+  - "dad"
+  - "doch"
+  - "sestr"
+
+# 2. Bad roots
+bad-roots:
+  # Russian (Translit)
+  - "eblan"
+  - "dolboeb"
+  - "dolbo"
+  - "eban"
+  - "hue"
+  - "blyad"
+  - "gandon"
+  - "mudak"
+  - "pidr"
+  - "pidoras"
+  - "mraz"
+  - "ueban"
+  - "vyblyad"
+  - "shlyuh"        
+  - "shalav"       
+  - "prostitut"     
+  - "potaskuh"  
+  - "ebal"    
+  - "ebala"  
+  - "ebat"    
+  - "trakhal"  
+  - "trakhat"
+  - "trahal"     
+  # English
+  - "fuck"
+  - "shit"
+  - "bitch"
+  - "bastard"
+  - "cunt"
+  - "dick"
+  - "pussy"
+  - "retard"
+  - "whore"
+  - "slut"
+  - "hoe"
+  - "moron"
+  - "faggot"
+  - "fag"
+
+# 3. Expressive words
+expressive-words:
+  # Russian (Translit)
+  - "pizda"
+  - "pizdec"
+  - "blyad"
+  - "nahuy"
+  - "pohuy"
+  # English
+  - "fuck"
+  - "fucking"
+  - "shit"
+  - "crap"
+  - "damn"
+
+  # 4. Ads and links (Сonfigured for Russian servers)
+ad-words:
+  - "funpay"
+  - "playerok"
+  - "aternos"
+  - "minehut"
+  - "tochka"
+  - "dot"
+  - "reallyworld"
+  - "dexland"
+  - "funtime" 
+  - "holyworld"
+  - "funmine"
+  - "teslacraft"
+  - "vinemc" 
+  - "bixland"
+  - "mixland"  
+  - "spookytime"
+  - "ragemine"                          
+
+  # 5. Social networks and other
+social:
+    # Socials & Links
+  - "discord"
+  - "disgd"
+  - "dsgg"
+  - "tme"
+  - "telegram"
+  - "vkcom"
+  - "vkme"
+  - "youtube"
+  - "twitch"
+  - "tiktok"
+  - "com"
+  - "http"
+  - "https"
+  - "www"
+
+# 6. White-List
+allowed-words:
+  # Russian (Translit)
+  - "zastrahuyte"
+  - "zastrahuy"
+  - "strahovanie"
+  - "upotreblyat"
+  - "potreblenie"
+  - "soblyudat"
+  - "kolebaniya"
+  - "rubl"
+  # English
+  - "fact"
+  - "who"
+  - "whom"
+  - "much"
+  - "match"
+  - "piece"
+  - "peace"
+  - "beach"
+  - "block"
+  - "pvp"
+  - "pve"
+  - "afk"
+  - "spawn"
+  - "home"
+  - "tpa"
+  - "hue"
+  - "hues"
+  - "retardant"
+  - "retarder"
+  - "dick"
+  - "speed"   
+  - "crystal"     
+ 
+
+adult-words:
+  - "gashish"      
+  - "anasha"         
+  - "marihuyana"   
+  - "marihuana"
+  - "kosyak"        
+  - "boshki"        
+  - "geroin"        
+  - "kokain"         
+  - "kokos"         
+  - "methamfetamin"  
+  - "amfetamin"     
+  - "ekstazi"       
+  - "spays"         
+  - "sintetika"     
+  - "narkotik"       
+  - "psylocybin"
+  - "marki"                 
+  - "weed"
+  - "marijuana"
+  - "cannabis"
+  - "hashish"
+  - "ganja"
+  - "cocaine"
+  - "heroin"
+  - "methamphetamine"
+  - "amphetamine"
+  - "ecstasy"
+  - "mdma"
+  - "molly"
+  - "fentanyl"
+  - "ketamine"
+  - "shrooms"
+  - "drugdealer"
+  - "overdose"
+  - "narcotics"
+  - "klitor"        
+  - "vlagalische"   
+  - "sperma"        
+  - "erekcia"        
+  - "minet"          
+  - "kunilingus"    
+  - "analseks"     
+  - "masturbir"      
+  - "drochat"       
+  - "orgazm"        
+  - "trakhat"        
+  - "grupovuha"      
+  - "porno"        
+  - "striptiz"      
+  - "blowjob"
+  - "handjob"
+  - "masturbate"
+  - "orgasm"
+  - "ejaculate"
+  - "cumshot"
+  - "gangbang"
+  - "pornhub"
+  - "onlyfans"
+  - "sexting"
+  - "nudes"
+  - "horny"
+  - "intercourse"
+  - "genitals"
+ 
+adult-roots:
+  - "kokain"
+  - "geroin"
+  - "gashish"        
+  - "zakladk"       
+  - "fentanil"
+  - "fentanyl"
+  - "mdma"
+  - "methamphet"
+  - "amfetamin"
+  - "kristalmeth"   
+  - "masturbat"
+  - "pornhub"
+  - "onlyfans"
+  - "blowjob"
+  - "handjob"
+  - "cumshot"
+  - "gangbang"
+  - "meth"
+
+     
+punishments:
+  # Punishment commands (Don't forget to configure this command syntax for your installed punishments plugin!)
+  
+  mute-command: "mute %player% %duration% %reason%"
+  ban-command: "ban %player% %duration% %reason%"
+  banip-command: "banip %ip% %duration% %reason%"
+  kick-command: "kick %player% %reason%"
+
+
+
+
+
+  punishments-is-enabled: true
+
+  # If you write this keywords below instead of normal string duration, (Like 2h or 9d) you convert punishment command from temporary to permanent mode. 
+  perm-keywords:
+    - "permanent"
+    - "perm"
+    - "infinity"
+    - "inf"
+    - "-1"
+
+  
+priority:
+  # Violation priority. It is necessary to punish for the most priority violation.
+  caps: 1
+  spam: 2
+  insult: 3
+  adult-content: 4
+  family-insult: 5
+  social-media: 6
+  advertisement: 7
+
+
+warns:
+  # The warn limit. If violator reaches the maximum of the limit, plugin give them a punishment. If warn limit is disabled, the plugin gives a punishment to the violator without any latency or warn message. Not recommended to disable the warn-limit if you want a justice in the chat. Also, don't leave the warns enabled if you disabled the punishment if you want for correct plugin work.
+  warn-limit: 2
+  warn-limit-is-enabled: true
+  warn-message: |
+      &cYour message has been censored due to rule-violating words/meanings in it
+      &cPlease, communicate in the chat without any rules-violating words/meanings.
+  last-warn-message: |
+      &cThis is last warn. Don't write the rule-violating message.
+      &cOtherwise, you will be punished by A.P.V.E.
+
+  # If true, warns resets when server reloads or stops. Not recommended to disable if you want some freedom in chat in the your server.
+  warn_reset_when_server_restarts: true
+
+  # If true, warns may reset after a N. Not recommended to disable if you want some freedom in chat in the your server.
+  temporary-warns: true
+
+  # Time before N warns are reset. N = warn_reset_count
+  warn-reset-time: "1h"
+  warn_reset_count: 2
+  warns-is-enabled: true
+
+insult:
+  is-enabled: true
+  punishment-is-enabled: true
+  duration: "30m"
+  reason: "&cYou have been punished due to insulting."
+
+  
+  type: "mute"
+  blocking-reason: "&cYour message was blocked because it contains insults."
+
+  # If enabled, the plugin blocks the message. Consequently, the message don't reachs to the chat. This mode is incompatible with censorship modes.
+  blocking: false
+
+  censor-reason: "&cYour message was censored because it contains insults."
+
+  # If censorship is enabled, the plugin censores message fully. The enabled mode must be only one. (I know it is only one censorship mode but in future i will add the new censoreship modes)
+  censor: true
+
+family-insult:
+
+  is-enabled: true
+  punishment-is-enabled: true
+  duration: "8h"
+  reason: "&cYou have been punished due to insulting relatives."
+  
+  type: "mute"
+  blocking-reason: "&cYour message was blocked because it contains family insults."
+  blocking: false
+  censor-reason: "&cYour message was censored because it contains family insults."
+  censor: true
+
+ad-dist:
+  
+  is-enabled: true
+  punishment-is-enabled: true
+  duration: "24h"
+  reason: "&cYou have been punished due to distribution of advertisement."
+  
+  type: "banip"
+  blocking-reason: "&cYour message was blocked because it contains advertisement distribution."
+  blocking: false
+  censor-reason: "&cYour message was censored because it contains advertisement distribution."
+  censor: true
+
+soc-media-dist:
+  
+  is-enabled: true
+  punishment-is-enabled: true
+  duration: "180m"
+  reason: "&cYou have been punished due to social media distribution."
+  # Allows social media mentions or distribution when disabled. Needs to be disabled if server has youtubers or other media, who distributes thyself or if you want more freedom in the chat
+  
+  type: "ban"
+  blocking-reason: "&cYour message was blocked because it contains social media distribution."
+  blocking: true
+  censor-reason: "&cYour message was censored because it contains social media distribution."
+  censor: false
+
+
+adult-content:
+  is-enabled: true
+  punishment-is-enabled: true 
+  type: "mute"
+  duration: "8h"
+  reason: "&cYou have been punished due to 18+ content (drugs / sexual)."
+  blocking-reason: "&cYour message was blocked because it contains adult (18+) content."
+  blocking: true
+  censor-reason: "&cYour message was censored because it contains adult (18+) content."
+  censor: false
+      
+ 
+spam:
+  is-enabled: true
+  punishment-is-enabled: true
+ 
+  max-similar-messages: 3
+ 
+  time-window-seconds: 60
+ 
+  similarity-threshold: 0.75
+
+  
+  type: "mute"
+  duration: "30m"
+  reason: "&cYou have been punished due to spam."
+  blocking-reason: "&cYour message was blocked because it is a spam."
+  blocking: false
+
+caps:
+  is-enabled: true
+  punishment-is-enabled: false
+  min-message-length: 6
+  min-caps-percentage: 70
+  
+  type: "mute"
+  duration: "15m"
+  reason: "&cYou have been punished due to excessive caps."
+
+  blocking-reason: "&cYour message was blocked because it is wrotten in upper case."
+  blocking: false
+  censor-reason: "&cYour message was censored because it is wrotten in upper case."
+  censor: false
+
+intercepted-commands:
+  - "msg"
+  - "w"
+  - "tell"
+  - "m"
+  - "whisper"
+  - "pm"
+  - "r"
+  - "reply"
+  - "nc"
+  - "tc"
+
+blocked-domains:
+  - "ru"
+  - "com"
+  - "net"
+  - "org"
+  - "gg"
+  - "io"
+  - "xyz"
+  - "site"
+  - "online"
+  - "top"
+  - "me"
+  - "fun"
+  - "info"
+  - "shop"
+  - "store"
