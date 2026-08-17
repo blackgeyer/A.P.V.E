@@ -1,6 +1,6 @@
 # Autonomous Potential Violation Eradicator (A.P.V.E)
 
-> **Author / Автор:** 48h_48m_48s | **Version / Версия:** 1.0.0 | **License / Лицензия:** GPLv3
+> **Author / Автор:** 48h_48m_48s | **Version / Версия:** 1.1.0 | **License / Лицензия:** GPLv3
 
 ---
 
