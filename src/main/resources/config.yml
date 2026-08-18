@@ -566,3 +566,30 @@ blocked-domains:
   - "info"
   - "shop"
   - "store"
+
+
+command-msg:
+  perm-fail: "&cAccess denied."
+  help-command-view-req: "&cUnknown commmand. Type /apve help for see available commands. "
+  help-command-msg: 
+    - "&aAvailable commands:"
+    - "&2/apve reload — Reload APVE's configuration"
+    - "&2/apve warns show <nickname> — View the player's warns history"
+    - "&2/apve warns remove <nickname> <integer> — Remove the player's warns. The removing warns equals <integer> argument."
+    - "&2/apve warns clear <nickname> — Remove all the player's warns."
+
+  cfg-reload-msg: "&1Reloading configuration..."
+  invalid-syntax: "&cInvalid syntax. Usage: {usage}"
+  invalid-number: "&cArgument '{arg}' must be a valid number."
+  
+  warns:
+    no-warns: "&ePlayer {player} currently has no active warns."
+    show: "&aPlayer &e{player} &ahas &c{amount} &aactive warns. Highest violation rule: &c{violation}&a."
+    removed: "&aSuccessfully removed &e{amount} &awarns from &e{player}&a. Remaining warns: &e{left}&a."
+    cleared: "&aAll warns successfully cleared for &e{player}&a."
+
+
+  
+
+
+ 

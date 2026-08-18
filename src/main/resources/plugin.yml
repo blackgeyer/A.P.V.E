@@ -1,7 +1,41 @@
 name: APVE
-version: 1.0.0
-main: com.apve.apve
+version: 1.2.0
+main: org.apve.apve
 api-version: '1.20.5'
-authors: [48h_48m_48s]
+authors: [blackgeyer/blackgeier]
 depend:
   - packetevents
+
+commands:
+  apve:
+    description: APVE management
+    usage: /apve <reload|warns>
+    permission: apve.use
+
+permissions:
+  apve.reload:
+    description: Allows reloading APVE config
+    default: op
+
+  apve.warns.show:
+    description: View the player's warns count
+    default: op
+
+  apve.warns.remove:
+    description: Allows remove player's warns
+    default: op
+
+  apve.warns.clear:
+    description: Allows clear player's warns
+    default: op
+
+  apve.help:
+    description: Allows to use apve help command
+    default: op
+
+
+
+
+
+
+
