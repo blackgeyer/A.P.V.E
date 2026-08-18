@@ -1,4 +1,4 @@
-package com.apve;
+package org.apve;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
