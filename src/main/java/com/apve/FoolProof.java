@@ -4,6 +4,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class FoolProof {
 
@@ -16,15 +17,16 @@ public class FoolProof {
     public static final String[] LATINIC_KEYS = {
             "insult-words", "family-insult-words", "family-roots",
             "bad-roots", "expressive-words", "ad-words",
-            "allowed-words", "adult-words", "adult-roots"
-    };
-
-    public static final String[] LATINIC_SYMBOL_KEYS = {
-            "social"
+            "allowed-words", "adult-words", "adult-roots", "social"
     };
 
     private static final String STRICT_LATIN_PATTERN = "^[a-z]+$";
-    private static final String STRICT_LATIN_SYMBOL_PATTERN = "^[a-z0-9.-]+$";
+    
+    private static final Pattern DURATION_PATTERN = Pattern.compile("^(\\d+(s|m|h|d|w|mo|y))+$", Pattern.CASE_INSENSITIVE);
+
+    public static final Set<String> PUNISHMENT_TYPE = Set.of(
+            "mute", "ban", "banip", "none", "warn", "kick"
+    );
 
     public FoolProof(YamlConfiguration config, List<String> errors, List<String> warnings) {
         this.config = config;
@@ -34,45 +36,42 @@ public class FoolProof {
         this.punishment = booleanChecker(config, "punishments.punishments-is-enabled", false, errors);
     }
 
-    public static void validateDictionaries(YamlConfiguration config, List<String> errors, List<String> warnings) {
-        for (String key : LATINIC_KEYS) {
-            if (!config.contains(key)) continue;
-
-            List<String> words = config.getStringList(key);
-            for (int i = 0; i < words.size(); i++) {
-                String word = words.get(i);
-                if (word == null || word.isBlank()) {
-                    errors.add("'" + key + "' dictionary: Null or empty string found (Position " + (i + 1) + ").");
-                    continue;
-                }
-                if (!word.matches(STRICT_LATIN_PATTERN)) {
-                    errors.add(String.format("'%s' in '%s' has illegal symbols. Use lowercase latin characters only.", word, key));
-                }
-            }
-        }
-
-        for (String key : LATINIC_SYMBOL_KEYS) {
-            if (!config.contains(key)) continue;
-
-            List<String> words = config.getStringList(key);
-            for (int i = 0; i < words.size(); i++) {
-                String word = words.get(i);
-                if (word == null || word.isBlank()) {
-                    errors.add("'" + key + "' dictionary: Null or empty string found (Position " + (i + 1) + ").");
-                    continue;
-                }
-                if (!word.matches(STRICT_LATIN_SYMBOL_PATTERN)) {
-                    errors.add(String.format("'%s' in '%s' has illegal symbols. Use lowercase latin characters, numbers, dots, and hyphens only.", word, key));
-                }
-            }
-        }
-    }
-
     public ValidationResult validateAll() {
         List<String> errors = new ArrayList<>();
         List<String> warnings = new ArrayList<>();
 
-        validateDictionaries(config, errors, warnings);
+        List<String> rawDomains = config.getStringList("blocked-domains");
+        Set<String> blockedDomains = new HashSet<>();
+
+        List<String> rawCommands = config.getStringList("intercepted-commands");
+        Set<String> interceptedCommands = new HashSet<>();
+
+        List<String> rawPermKeywords = config.getStringList("punishments.perm-keywords");
+        Set<String> permKeywords = new HashSet<>();
+
+        Map<String, Set<String>> cachedDictionaries = new HashMap<>();
+
+        for (String key : LATINIC_KEYS) {
+            if (!config.contains(key)) continue;
+
+            List<String> rawWords = config.getStringList(key);
+            Set<String> wordSet = new HashSet<>(rawWords.size());
+
+            for (int i = 0; i < rawWords.size(); i++) {
+                String word = rawWords.get(i);
+                if (word == null || word.isBlank()) {
+                    errors.add("'" + key + "' dictionary: Null or empty string found (Position " + (i + 1) + ").");
+                    continue;
+                }
+                String lowerWord = word.toLowerCase(Locale.ROOT);
+                if (!lowerWord.matches(STRICT_LATIN_PATTERN)) {
+                    errors.add(String.format("'%s' in '%s' has illegal symbols. Use lowercase latin characters only.", word, key));
+                } else {
+                    wordSet.add(lowerWord);
+                }
+            }
+            cachedDictionaries.put(key, wordSet);
+        }
 
         Map<String, Integer> priorityMap = new HashMap<>();
         ConfigurationSection prioritySection = config.getConfigurationSection("priority");
@@ -121,23 +120,114 @@ public class FoolProof {
                             errors.add("'" + key + "' Category: Blocking mode is incompatible with censor mode.");
                         }
                     }
+
+                    if (section.contains("type")) {
+                        typeChecker(config, key + ".type", "none", errors, warnings);
+                    }
                 }
             }
         }
 
-        List<String> blockedDomains = config.getStringList("blocked-domains");
-        if (blockedDomains.isEmpty()) {
-            blockedDomains = Arrays.asList("ru", "com", "net", "org", "gg", "io", "xyz", "site", "online", "top", "me", "fun", "info", "shop", "store");
-            warnings.add("List 'blocked-domains' is empty. Default list loaded.");
+        if (rawPermKeywords.isEmpty()) {
+            warnings.add("List 'punishments.perm-keywords' is empty. Proper plugin operation is not guaranteed.");
+        } else {
+            for (String permKeyW : rawPermKeywords) {
+                permKeywords.add(permKeyW.toLowerCase(Locale.ROOT));
+            }
         }
 
-        Set<String> interceptedCommands = new HashSet<>(config.getStringList("intercepted-commands"));
-        if (interceptedCommands.isEmpty()) {
-            interceptedCommands = Set.of("msg", "w", "tell", "m", "whisper", "pm", "r", "reply");
-            warnings.add("List 'intercepted-commands' is empty. Default list loaded.");
+        validateReasons(errors);
+
+        validateDurations(errors, permKeywords);
+
+        if (rawDomains.isEmpty()) {
+            warnings.add("List 'blocked-domains' is empty. Proper plugin operation is not guaranteed.");
+        } else {
+            for (String domain : rawDomains) {
+                blockedDomains.add(domain.toLowerCase(Locale.ROOT));
+            }
         }
 
-        return new ValidationResult(errors, warnings, priorityMap, blockedDomains, interceptedCommands);
+        if (rawCommands.isEmpty()) {
+            warnings.add("List 'intercepted-commands' is empty. Proper plugin operation is not guaranteed.");
+        } else {
+            for (String cmd : rawCommands) {
+                interceptedCommands.add(cmd.toLowerCase(Locale.ROOT));
+            }
+        }
+
+        return new ValidationResult(errors, warnings, priorityMap, cachedDictionaries, blockedDomains, interceptedCommands);
+    }
+
+    private void validateDurations(List<String> errors, Set<String> permKeywords) {
+        for (String key : config.getKeys(true)) {
+            if (isDurationKey(key)) {
+                if (!config.isString(key)) {
+                    errors.add("Parameter '" + key + "' must be a String duration (e.g. '30m', '2h').");
+                    continue;
+                }
+
+                String rawValue = config.getString(key);
+                if (rawValue == null || rawValue.isBlank()) {
+                    errors.add("Duration parameter '" + key + "' cannot be null or empty.");
+                    continue;
+                }
+
+                String cleanValue = rawValue.trim().replaceAll("^[\"']+|[\"']+$", "").trim();
+                String lowerValue = cleanValue.toLowerCase(Locale.ROOT);
+
+                if (permKeywords.contains(lowerValue)) {
+                    continue;
+                }
+
+                if (!DURATION_PATTERN.matcher(cleanValue).matches()) {
+                    errors.add("Invalid duration format in '" + key + "': '" + rawValue + "'.");
+                }
+            }
+        }
+    }
+
+    private boolean isDurationKey(String key) {
+        return key.endsWith(".duration") || key.equals("warns.warn-reset-time");
+    }
+
+    private void validateReasons(List<String> errors) {
+        for (String key : config.getKeys(true)) {
+            if (isReasonKey(key)) {
+                if (config.isList(key)) {
+                    List<String> lines = config.getStringList(key);
+                    if (lines.isEmpty()) {
+                        errors.add("Parameter '" + key + "' is an empty list.");
+                    } else {
+                        for (int i = 0; i < lines.size(); i++) {
+                            checkStringStrict(lines.get(i), key + " (Line " + (i + 1) + ")", errors);
+                        }
+                    }
+                } else {
+                    String rawValue = config.getString(key);
+                    checkStringStrict(rawValue, key, errors);
+                }
+            }
+        }
+    }
+
+    private boolean isReasonKey(String key) {
+        return key.endsWith(".reason") 
+            || key.endsWith(".blocking-reason") 
+            || key.endsWith(".censor-reason");
+    }
+
+    private void checkStringStrict(String value, String path, List<String> errors) {
+        if (value == null) {
+            errors.add("Missing required text parameter: '" + path + "'");
+            return;
+        }
+
+        String cleaned = value.trim().replaceAll("^[\"']+|[\"']+$", "").trim();
+
+        if (cleaned.isEmpty()) {
+            errors.add("Parameter '" + path + "' cannot be empty or contain only quotes/whitespaces.");
+        }
     }
 
     private static boolean booleanChecker(YamlConfiguration config, String path, boolean defaultValue, List<String> errors) {
@@ -152,14 +242,48 @@ public class FoolProof {
         return config.getBoolean(path);
     }
 
+    private static String typeChecker(YamlConfiguration config, String path, String defaultValue, List<String> errors, List<String> warnings) {
+        if (!config.contains(path)) {
+            errors.add("Missing required parameter: '" + path + "'");
+            return defaultValue;
+        }
+        if (!config.isString(path)) {
+            errors.add("Parameter '" + path + "' must be a string.");
+            return defaultValue;
+        }
+        String rawValue = config.getString(path);
+        if (rawValue == null || rawValue.isBlank()) {
+            errors.add("Parameter '" + path + "' cannot be null or empty.");
+            return defaultValue;
+        }
+
+        String cleanValue = rawValue.trim().replaceAll("^[\"']+|[\"']+$", "").trim();
+        String normalizedValue = cleanValue.toLowerCase(Locale.ROOT);
+
+        if (!PUNISHMENT_TYPE.contains(normalizedValue)) {
+            errors.add("Invalid punishment type in '" + path + "': '" + rawValue + "'. Allowed types are '" + PUNISHMENT_TYPE + "'.");
+            return defaultValue;
+        }
+
+        if ("none".equalsIgnoreCase(rawValue)) {
+            warnings.add("Punishment type '" + rawValue + "' in '" + path + "' equals none. Proper plugin operation is not guaranteed.");
+        }
+        return normalizedValue;
+    }
+
     public record ValidationResult(
             List<String> errors, 
             List<String> warnings, 
             Map<String, Integer> priorityMap,
-            List<String> blockedDomains,
+            Map<String, Set<String>> dictionaries,
+            Set<String> blockedDomains,
             Set<String> interceptedCommands
     ) {
         public boolean hasErrors() { return !errors.isEmpty(); }
         public boolean hasWarnings() { return !warnings.isEmpty(); }
+        public boolean containsWord(String dictionaryKey, String word) {
+            Set<String> set = dictionaries.get(dictionaryKey);
+            return set != null && set.contains(word.toLowerCase(Locale.ROOT));
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.apve;
+package org.apve;
 
 public class SimilarityChecker {
 

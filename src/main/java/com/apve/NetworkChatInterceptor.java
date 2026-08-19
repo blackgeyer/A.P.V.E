@@ -616,22 +616,29 @@ if (isChatMsg) {
 
     // ─── PUNISH ──────────────────────────────────────────────────────────
     private static void applyPunishment(Plugin plugin, Player player, PunishmentManager pm, ViolationRule rule, String detail, String word) {
-        switch (rule.type().toLowerCase()) {
-            case "mute" -> pm.mutePlayer(player.getUniqueId(), rule.reason(), rule.duration());
-            case "ban" -> pm.banPlayer(player.getUniqueId(), rule.reason(), rule.duration());
-            case "banip" -> {
-                String ip = (player.getAddress() != null && player.getAddress().getAddress() != null)
-                        ? player.getAddress().getAddress().getHostAddress() : "127.0.0.1";
-                pm.banipPlayer(ip, rule.reason(), rule.duration());
+    String type = rule.type() != null ? rule.type().toLowerCase(java.util.Locale.ROOT).trim() : "none";
+
+    switch (type) {
+        case "mute" -> pm.mutePlayer(player.getUniqueId(), rule.reason(), rule.duration());
+        case "ban" -> pm.banPlayer(player.getUniqueId(), rule.reason(), rule.duration());
+        case "banip" -> {
+            if (player.getAddress() == null || player.getAddress().getAddress() == null) {
+                plugin.getLogger().warning("Unable to get " + player.getName() + "'s IP for banip.");
+                return;
             }
-            case "kick" -> pm.kickPlayer(player.getUniqueId(), rule.reason());
-            case "none" -> { /* nothing */ }
+            String ip = player.getAddress().getAddress().getHostAddress();
+            pm.banipPlayer(ip, rule.reason(), rule.duration());
         }
-        
-        if (!rule.type().equalsIgnoreCase("none")) {
-            plugin.getLogger().info(logLine(rule.type().toUpperCase(), rule.duration(), player.getName(), detail, word));
+        case "kick" -> pm.kickPlayer(player.getUniqueId(), rule.reason());
+        case "none", "" -> { return; }
+        default -> {
+            plugin.getLogger().warning("Unknown punishment type: " + rule.type());
+            return;
         }
     }
+
+    plugin.getLogger().info(logLine(type.toUpperCase(java.util.Locale.ROOT), rule.duration(), player.getName(), detail, word));
+}
 
     // ─── HELPERS ─────────────────────────────────────────────────────────
     private static boolean hasFamilyContext(String[] normWords, Set<String> familyWords, int insultIndex) {
