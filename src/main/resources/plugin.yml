@@ -1,5 +1,5 @@
 name: APVE
-version: 1.2.0
+version: 1.2.2
 main: org.apve.apve
 api-version: '1.20.5'
 authors: [blackgeyer/blackgeier]
