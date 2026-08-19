@@ -8,6 +8,8 @@
 
 A Minecraft server plugin designed to keep your chat clean at all times without administration intervention. Powered by **PacketEvents**.
 
+This plugin is currently in Beta version and may contain bugs. Consequently, proper plugin operation is NOT guaranteed.
+
 ### 📌 This plugin can
 * Automatic chat filtering and offline punishment issuance.
 * Flexible configurations for punishment duration, toggles, and banned words in `config.yml`.
