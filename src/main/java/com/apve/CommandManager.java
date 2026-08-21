@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public class CommandManager implements CommandExecutor, TabCompleter {
 
+    // Permission registration
     private static final String PERMISSION_RELOAD = "apve.reload";
     private static final String PERMISSION_SHOW = "apve.warns.show";
     private static final String PERMISSION_REMOVE = "apve.warns.remove";
@@ -26,6 +27,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         this.plugin = plugin;
     }
 
+    // ———— MAIN COMMAND HANDLER ———————————————————————
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
@@ -33,6 +36,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // Checking the command argument
         switch (args[0].toLowerCase()) {
             case "reload" -> handleReload(sender);
             case "warns"  -> handleWarns(sender, args);
@@ -45,6 +49,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
     // ─── HANDLERS ────────────────────────────────────────────────────────
 
+    // ————— RELOAD ARGUMENT HANDLER —————
+
     private void handleReload(CommandSender sender) {
         if (!sender.hasPermission(PERMISSION_RELOAD)) {
             sendFormatted(sender, "command-msg.perm-fail");
@@ -54,6 +60,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         sendFormatted(sender, "command-msg.cfg-reload-msg");
         plugin.performReload(sender);
     }
+
+    // ———— WARNS ARGUMENT HANDLER ——————
 
     private void handleWarns(CommandSender sender, String[] args) {
         if (args.length < 3) {
@@ -173,7 +181,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         return List.of();
     }
 
-    // ─── UTILS (DYNAMIC FORMATTING) ───────────────────────────────────────
 
 
     private void sendFormatted(CommandSender sender, String path, String... replacements) {
