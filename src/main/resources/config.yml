@@ -5,10 +5,9 @@
 # Normalizer converts any cyrilic symbols into latin alphabet. Consequently, the addition of new banned words must be fully in latin alphabet like (шлюха --> shlyuha).
 # Full normalization documentation you can see in documentation.txt
 
-
 thresholds:
-  high: 0.75   
-  medium: 0.50   
+  high: 0.78  
+  medium: 0.57  
 
 # 1. Insult words
 insult-words:
@@ -17,6 +16,7 @@ insult-words:
   - "eblanische"
   - "eblanka"
   - "dolboeb"
+  - "dolboyob"
   - "dolboebina"
   - "dolboyascher"
   - "ebanat"
@@ -24,6 +24,7 @@ insult-words:
   - "ebanatik"
   - "hueplet"
   - "huesos"
+  - "huesosi"
   - "hueglot"
   - "hueputalo"
   - "huenosec"
@@ -32,7 +33,13 @@ insult-words:
   - "pizdabol"
   - "pizdabolka"
   - "pizdaliz"
+  - "blyad"
+  - "blyat"
+  - "blyadb"
+  - "blyatb"
   - "blyadina"
+  - "blyadskiy"
+  - "blyadstvo"
   - "blyadun"
   - "blyadota"
   - "gandon"
@@ -70,21 +77,38 @@ insult-words:
   - "vyblyadok" 
   - "ebut"
   - "ebatb"
+  - "ebat"
+  - "ebal"
+  - "ebala"
   - "ebem"
+  - "ebaniy"
+  - "ebuchiy"
+  - "zaebal"
+  - "naebal"
+  - "doebalsya"
+  - "poebat"
   - "trahaem"
   - "trahnuli"
   - "trahnul"
   - "trahatsa"
+  - "trahal"
+  - "trahala"
+  - "trakhat"
   - "vyebali"
   - "vyebal"
-  - "vyebal" 
   # English
+  - "fuck"
+  - "shit"
+  - "dick"
+  - "cunt"
+  - "hoe"
+  - "fag"
+  - "pussy"
   - "bastard"
   - "bitch"
   - "asshole"
   - "dickhead"
   - "retard"
-  - "cunt"
   - "loser"
   - "dumbass"
   - "idiot"
@@ -100,6 +124,10 @@ insult-words:
 # 1.1. Family insult words
 family-insult-words:
   # Russian (Translit)
+  - "mam"
+  - "pap"
+  - "bat"
+  - "otc"
   - "mamu"
   - "mame"
   - "mamul"
@@ -147,30 +175,16 @@ family-insult-words:
   - "orphan"
 
 family-roots:
-  - "mam"   
-  - "matb"   
-  - "otc"       
-  - "bat"    
   - "roditel"  
-  - "pap"
   - "opek"      
   - "mother"
   - "father"
-  - "parent"
-  - "mom"
-  - "dad"
-  - "doch"
-  - "sestr"
 
-# 2. Bad roots
 bad-roots:
   # Russian (Translit)
   - "eblan"
   - "dolboeb"
-  - "dolbo"
-  - "eban"
-  - "hue"
-  - "blyad"
+  - "huesos"
   - "gandon"
   - "mudak"
   - "pidr"
@@ -182,29 +196,12 @@ bad-roots:
   - "shalav"       
   - "prostitut"     
   - "potaskuh"  
-  - "ebal"    
-  - "ebala"  
-  - "ebat"    
-  - "trakhal"  
-  - "trakhat"
-  - "trahal"     
   # English
-  - "fuck"
-  - "shit"
-  - "bitch"
   - "bastard"
-  - "cunt"
-  - "dick"
-  - "pussy"
-  - "retard"
   - "whore"
   - "slut"
-  - "hoe"
-  - "moron"
   - "faggot"
-  - "fag"
 
-# 3. Expressive words
 expressive-words:
   # Russian (Translit)
   - "pizda"
@@ -219,14 +216,14 @@ expressive-words:
   - "crap"
   - "damn"
 
-  # 4. Ads and links (Сonfigured for Russian servers)
+# 4. Ads and links
 ad-words:
   - "funpay"
   - "playerok"
   - "aternos"
   - "minehut"
-  - "tochka"
   - "dot"
+  - "tochka"
   - "reallyworld"
   - "dexland"
   - "funtime" 
@@ -239,35 +236,44 @@ ad-words:
   - "spookytime"
   - "ragemine"                          
 
-  # 5. Social networks and other
+# 5. Social networks and other
 social:
-    # Socials & Links
   - "discord"
   - "disgd"
   - "dsgg"
-  - "tme"
   - "telegram"
   - "vkcom"
   - "vkme"
   - "youtube"
   - "twitch"
   - "tiktok"
-  - "com"
-  - "http"
-  - "https"
-  - "www"
 
 # 6. White-List
 allowed-words:
   # Russian (Translit)
+  - "zdarova"
+  - "zdorov"
+  - "zdorova"
+  - "privet"
+  - "zdrastvuyte"
   - "zastrahuyte"
   - "zastrahuy"
   - "strahovanie"
   - "upotreblyat"
+  - "upotreblyatb"
+  - "oskorblyat"
+  - "oskorblyatb"
   - "potreblenie"
   - "soblyudat"
   - "kolebaniya"
+  - "kolebat"
+  - "kolebalsya"
   - "rubl"
+  - "hleb"
+  - "komanda"
+  - "komandu"
+  - "rebyata"
+  - "rebenok"
   # English
   - "fact"
   - "who"
@@ -288,10 +294,14 @@ allowed-words:
   - "hues"
   - "retardant"
   - "retarder"
-  - "dick"
+  - "dickens"
   - "speed"   
-  - "crystal"     
- 
+  - "crystal"
+  - "method"
+  - "department"
+  - "nutmeg"
+  - "oatmeal"
+  - "welcome"
 
 adult-words:
   - "gashish"      
@@ -329,6 +339,7 @@ adult-words:
   - "drugdealer"
   - "overdose"
   - "narcotics"
+  - "meth"
   - "klitor"        
   - "vlagalische"   
   - "sperma"        
@@ -376,24 +387,15 @@ adult-roots:
   - "handjob"
   - "cumshot"
   - "gangbang"
-  - "meth"
 
-     
 punishments:
-  # Punishment commands (Don't forget to configure this command syntax for your installed punishments plugin!)
-  
   mute-command: "mute %player% %duration% %reason%"
   ban-command: "ban %player% %duration% %reason%"
-  banip-command: "banip %ip% %duration% %reason%"
+  banip-command: "ipban %ip% %duration% %reason%"
   kick-command: "kick %player% %reason%"
-
-
-
-
 
   punishments-is-enabled: true
 
-  # If you write this keywords below instead of normal string duration, (Like 2h or 9d) you convert punishment command from temporary to permanent mode. 
   perm-keywords:
     - "permanent"
     - "perm"
@@ -401,20 +403,20 @@ punishments:
     - "inf"
     - "-1"
 
-  
 priority:
-  # Violation priority. It is necessary to punish for the most priority violation.
   caps: 1
   spam: 2
   insult: 3
   adult-content: 4
   family-insult: 5
-  social-media: 6
-  advertisement: 7
+  soc-media-dist: 6
+  ad-dist: 7
 
+# If true, the plugin will don't apply any warn/censor/blocking etc. to the violators. Plugin will only log every violate. Needs if you don't trust the APVE system or if you too lazy to configure the config.
+# This mode is incompatible with every action. Consequently, if you enable this mode with another auctions, A.P.V.E's work will aborted.
+audit-mode: false
 
 warns:
-  # The warn limit. If violator reaches the maximum of the limit, plugin give them a punishment. If warn limit is disabled, the plugin gives a punishment to the violator without any latency or warn message. Not recommended to disable the warn-limit if you want a justice in the chat. Also, don't leave the warns enabled if you disabled the punishment if you want for correct plugin work.
   warn-limit: 2
   warn-limit-is-enabled: true
   warn-message: |
@@ -424,13 +426,8 @@ warns:
       &cThis is last warn. Don't write the rule-violating message.
       &cOtherwise, you will be punished by A.P.V.E.
 
-  # If true, warns resets when server reloads or stops. Not recommended to disable if you want some freedom in chat in the your server.
   warn_reset_when_server_restarts: true
-
-  # If true, warns may reset after a N. Not recommended to disable if you want some freedom in chat in the your server.
   temporary-warns: true
-
-  # Time before N warns are reset. N = warn_reset_count
   warn-reset-time: "1h"
   warn_reset_count: 2
   warns-is-enabled: true
@@ -440,26 +437,17 @@ insult:
   punishment-is-enabled: true
   duration: "30m"
   reason: "&cYou have been punished due to insulting."
-
-  
   type: "mute"
   blocking-reason: "&cYour message was blocked because it contains insults."
-
-  # If enabled, the plugin blocks the message. Consequently, the message don't reachs to the chat. This mode is incompatible with censorship modes.
   blocking: false
-
   censor-reason: "&cYour message was censored because it contains insults."
-
-  # If censorship is enabled, the plugin censores message fully. The enabled mode must be only one. (I know it is only one censorship mode but in future i will add the new censoreship modes)
   censor: true
 
 family-insult:
-
   is-enabled: true
   punishment-is-enabled: true
   duration: "8h"
   reason: "&cYou have been punished due to insulting relatives."
-  
   type: "mute"
   blocking-reason: "&cYour message was blocked because it contains family insults."
   blocking: false
@@ -467,12 +455,10 @@ family-insult:
   censor: true
 
 ad-dist:
-  
   is-enabled: true
   punishment-is-enabled: true
   duration: "24h"
   reason: "&cYou have been punished due to distribution of advertisement."
-  
   type: "banip"
   blocking-reason: "&cYour message was blocked because it contains advertisement distribution."
   blocking: false
@@ -480,19 +466,15 @@ ad-dist:
   censor: true
 
 soc-media-dist:
-  
   is-enabled: true
   punishment-is-enabled: true
   duration: "180m"
   reason: "&cYou have been punished due to social media distribution."
-  # Allows social media mentions or distribution when disabled. Needs to be disabled if server has youtubers or other media, who distributes thyself or if you want more freedom in the chat
-  
   type: "ban"
   blocking-reason: "&cYour message was blocked because it contains social media distribution."
   blocking: true
   censor-reason: "&cYour message was censored because it contains social media distribution."
   censor: false
-
 
 adult-content:
   is-enabled: true
@@ -505,18 +487,12 @@ adult-content:
   censor-reason: "&cYour message was censored because it contains adult (18+) content."
   censor: false
       
- 
 spam:
   is-enabled: true
   punishment-is-enabled: true
- 
   max-similar-messages: 3
- 
   time-window-seconds: 60
- 
   similarity-threshold: 0.75
-
-  
   type: "mute"
   duration: "30m"
   reason: "&cYou have been punished due to spam."
@@ -528,11 +504,9 @@ caps:
   punishment-is-enabled: false
   min-message-length: 6
   min-caps-percentage: 70
-  
   type: "mute"
   duration: "15m"
   reason: "&cYou have been punished due to excessive caps."
-
   blocking-reason: "&cYour message was blocked because it is wrotten in upper case."
   blocking: false
   censor-reason: "&cYour message was censored because it is wrotten in upper case."
@@ -567,7 +541,6 @@ blocked-domains:
   - "shop"
   - "store"
 
-
 command-msg:
   perm-fail: "&cAccess denied."
   help-command-view-req: "&cUnknown commmand. Type /apve help for see available commands. "
@@ -587,9 +560,3 @@ command-msg:
     show: "&aPlayer &e{player} &ahas &c{amount} &aactive warns. Highest violation rule: &c{violation}&a."
     removed: "&aSuccessfully removed &e{amount} &awarns from &e{player}&a. Remaining warns: &e{left}&a."
     cleared: "&aAll warns successfully cleared for &e{player}&a."
-
-
-  
-
-
- 
