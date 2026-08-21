@@ -11,10 +11,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -23,7 +23,6 @@ import java.util.logging.SimpleFormatter;
 public class apve extends JavaPlugin implements Listener {
 
     private Logger suspiciousLogger;
-    private Logger maliciousLogger;
     private PunishmentManager punishmentManager;
 
     @Override
@@ -38,64 +37,46 @@ public class apve extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        checkConfigForDefault();
+        checkConfigModification();
 
         YamlConfiguration yamlConfig = (YamlConfiguration) getConfig();
+        List<String> initErrors = new ArrayList<>();
+        List<String> initWarnings = new ArrayList<>();
 
-        FoolProof foolProof = new FoolProof(yamlConfig);
+        FoolProof foolProof = new FoolProof(yamlConfig, initErrors, initWarnings);
         FoolProof.ValidationResult result = foolProof.validateAll();
 
-        List<String> totalWarnings = result.warnings();
+        List<String> totalWarnings = new ArrayList<>(initWarnings);
+        totalWarnings.addAll(result.warnings());
 
-        boolean auditmode = getConfig().getBoolean("audit-mode");
+        List<String> totalErrors = new ArrayList<>(initErrors);
+        totalErrors.addAll(result.errors());
 
         if (!totalWarnings.isEmpty()) {
             getLogger().warning("Configuration Warnings Found:");
             for (String warn : totalWarnings) {
                 getLogger().warning(" [!] " + warn);
             }
+            getLogger().warning("Proper plugin operation is not guaranteed.");
         }
 
-        if (result.hasErrors()) {
-            int maxSeverity = result.maxSeverity();
-
-            if (maxSeverity < 4) {
-                YamlConfiguration defConfig = getDefaultConfig();
-                getLogger().warning(String.format("CONFIGURATION ERRORS DETECTED (Severity %d/4):", maxSeverity));
-                
-                for (FoolProof.ConfigError err : result.errors()) {
-                    if (err.severity() == 3 && err.path() != null && defConfig != null && defConfig.contains(err.path())) {
-                        getConfig().set(err.path(), defConfig.get(err.path()));
-                        getLogger().warning(String.format(" [Level %d] %s (Auto-fixed to default)", err.severity(), err.message()));
-                    } else {
-                        getLogger().warning(String.format(" [Level %d] %s", err.severity(), err.message()));
-                    }
-                }
-                getLogger().warning("Plugin will continue working, but proper plugin operation is not guaranteed. The plugin may use default values for safety. Use at your own risk!");
-            } 
-            else {
-                getLogger().severe(String.format("CRITICAL CONFIGURATION ERRORS DETECTED (Severity %d/4)!", maxSeverity));
-                for (FoolProof.ConfigError err : result.errors()) {
-                    if (err.severity() >= 4) {
-                        getLogger().severe(String.format(" [CRITICAL - Level %d] %s", err.severity(), err.message()));
-                    } else {
-                        getLogger().warning(String.format(" [MINOR - Level %d] %s", err.severity(), err.message()));
-                    }
-                }
-                getLogger().severe("Plugin disabled due to critical configuration errors.");
-
-                getServer().getPluginManager().disablePlugin(this);
-                return;
+        if (!totalErrors.isEmpty()) {
+            getLogger().severe("CRITICAL CONFIGURATION ERRORS!");
+            for (String err : totalErrors) {
+                getLogger().severe(" [X] " + err);
             }
+            getLogger().severe("Plugin disabled due to critical errors.");
+
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
         setupSuspiciousLogger();
-        setupMaliciousLogger();
 
         this.punishmentManager = new PunishmentManager(this);
         getServer().getPluginManager().registerEvents(this, this);
 
-        NetworkChatInterceptor.register(this, punishmentManager, suspiciousLogger, maliciousLogger, result);
+        NetworkChatInterceptor.register(this, punishmentManager, suspiciousLogger, result);
 
         PacketEvents.getAPI().init();
 
@@ -103,10 +84,6 @@ public class apve extends JavaPlugin implements Listener {
         getCommand("apve").setTabCompleter(new CommandManager(this));
 
         getLogger().info("Autonomous Potential Violation Eradicator [A.P.V.E] plugin has been successfully activated!");
-        if (auditmode) {
-        getLogger().warning("A.P.V.E Started with enabled audit-mode, the actions to the violators will not apply.");
-
-        }
     }
 
     @Override
@@ -117,49 +94,42 @@ public class apve extends JavaPlugin implements Listener {
         getLogger().info("Autonomous Potential Violation Eradicator plugin deactivated.");
     }
 
+    // ─── RELOAD ──────────────────────────────────────────────────────────
+
     public void performReload(CommandSender sender) {
         reloadConfig();
-        checkConfigForDefault();
+        checkConfigModification();
 
         YamlConfiguration yamlConfig = (YamlConfiguration) getConfig();
+        List<String> initErrors = new ArrayList<>();
+        List<String> initWarnings = new ArrayList<>();
 
-        FoolProof foolProof = new FoolProof(yamlConfig);
+        FoolProof foolProof = new FoolProof(yamlConfig, initErrors, initWarnings);
         FoolProof.ValidationResult result = foolProof.validateAll();
 
-        List<String> totalWarnings = result.warnings();
+        List<String> totalWarnings = new ArrayList<>(initWarnings);
+        totalWarnings.addAll(result.warnings());
+
+        List<String> totalErrors = new ArrayList<>(initErrors);
+        totalErrors.addAll(result.errors());
 
         if (!totalWarnings.isEmpty()) {
             getLogger().warning("Configuration Warnings Found:");
             for (String warn : totalWarnings) {
                 getLogger().warning(" [!] " + warn);
             }
+            getLogger().warning("Proper plugin operation is not guaranteed.");
         }
 
-        if (result.hasErrors()) {
-            int maxSeverity = result.maxSeverity();
-
-            if (maxSeverity >= 4) {
-                getLogger().severe(String.format("CRITICAL CONFIGURATION ERRORS ON RELOAD (Severity %d/4)!", maxSeverity));
-                for (FoolProof.ConfigError err : result.errors()) {
-                    if (err.severity() >= 4) {
-                        getLogger().severe(String.format(" [CRITICAL - Level %d] %s", err.severity(), err.message()));
-                    }
-                }
-                sender.sendMessage("[APVE] Reload aborted due to critical errors (Severity " + maxSeverity + "). Check console.");
-                return;
-            } else {
-                YamlConfiguration defConfig = getDefaultConfig();
-                getLogger().warning(String.format("Configuration errors found on reload (Severity %d/4). The plugin may use default values for safety. Use at your own risk!", maxSeverity));
-                
-                for (FoolProof.ConfigError err : result.errors()) {
-                    if (err.severity() == 3 && err.path() != null && defConfig != null && defConfig.contains(err.path())) {
-                        getConfig().set(err.path(), defConfig.get(err.path()));
-                        getLogger().warning(String.format(" [Level %d] %s (Auto-fixed to default)", err.severity(), err.message()));
-                    } else {
-                        getLogger().warning(String.format(" [Level %d] %s", err.severity(), err.message()));
-                    }
-                }
+        if (!totalErrors.isEmpty()) {
+            getLogger().severe("CRITICAL CONFIGURATION ERRORS!");
+            for (String err : totalErrors) {
+                getLogger().severe(" [X] " + err);
             }
+            getLogger().severe("Reload aborted due to critical errors.");
+
+            sender.sendMessage("[APVE] Reload failed. Check console for errors.");
+            return;
         }
 
         NetworkChatInterceptor.loadConfig(getConfig(), result);
@@ -167,19 +137,10 @@ public class apve extends JavaPlugin implements Listener {
         sender.sendMessage("[APVE] Config reloaded successfully.");
         getLogger().info("Config reloaded successfully.");
     }
-    
-    private YamlConfiguration getDefaultConfig() {
-        try (InputStream defaultStream = getResource("config.yml")) {
-            if (defaultStream != null) {
-                return YamlConfiguration.loadConfiguration(new InputStreamReader(defaultStream, StandardCharsets.UTF_8));
-            }
-        } catch (Exception e) {
-            getLogger().warning("Could not load internal config.yml for fallback.");
-        }
-        return null;
-    }
 
-    private void checkConfigForDefault() {
+    // ─── INTERNALS ───────────────────────────────────────────────────────
+
+    private void checkConfigModification() {
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) return;
 
@@ -198,8 +159,8 @@ public class apve extends JavaPlugin implements Listener {
                 getLogger().warning("Without configuring the config.yml, proper plugin operation not guaranteed.");
             }
         } catch (Exception e) {
-            getLogger().severe("Could not verify config.yml integrity: " + e.getMessage());
-            getLogger().severe("Proper plugin operation is not guaranteed.");
+            getLogger().warning("Could not verify config.yml integrity: " + e.getMessage());
+            getLogger().warning("Proper plugin opeartion is not guaranteed.");
         }
     }
 
@@ -228,29 +189,11 @@ public class apve extends JavaPlugin implements Listener {
             suspiciousLogger.addHandler(fh);
             suspiciousLogger.setUseParentHandlers(false);
         } catch (IOException e) {
-            getLogger().severe("Failed to create suspicious.log file: " + e.getMessage());
+            getLogger().severe("Failed to create .log file: " + e.getMessage());
         }
     }
-
 
     public Logger getSuspiciousLogger() {
         return suspiciousLogger;
-    }
-    private void setupMaliciousLogger() {
-        maliciousLogger = Logger.getLogger("MaliciousChat");
-        try {
-            File logDir = new File(getDataFolder(), "logs");
-            if (!logDir.exists()) logDir.mkdirs();
-            FileHandler fh = new FileHandler(getDataFolder() + "/logs/malicious.log", true);
-            fh.setFormatter(new SimpleFormatter());
-            maliciousLogger.addHandler(fh);
-            maliciousLogger.setUseParentHandlers(false);
-        } catch (IOException e) {
-            getLogger().severe("Failed to create malicious.log file: " + e.getMessage());
-        }
-    }
-
-    public Logger getMaliciousLogger() {
-        return maliciousLogger;
     }
 }
