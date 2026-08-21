@@ -1,6 +1,6 @@
 # Autonomous Potential Violation Eradicator (A.P.V.E)
 
-> **Author / Автор:** blackgeyer/blackgeier | **Version / Версия:** 1.2.2 | **License / Лицензия:** GPLv3
+> **Author / Автор:** blackgeyer/blackgeier | **Version / Версия:** 1.2.5 | **License / Лицензия:** GPLv3
 
 ---
 
@@ -8,7 +8,6 @@
 
 A Minecraft server plugin designed to keep your chat clean at all times without administration intervention. Powered by **PacketEvents**.
 
-This plugin is currently in Beta version and may contain bugs. Consequently, proper plugin operation is NOT guaranteed.
 
 ### 📌 This plugin can
 * Automatic chat filtering and offline punishment issuance.
