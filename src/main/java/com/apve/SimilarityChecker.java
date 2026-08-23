@@ -15,6 +15,10 @@ public class SimilarityChecker {
         int len2 = str2.length();
         if (len1 == 0 || len2 == 0) return 0.0;
 
+        if (str1.charAt(0) != str2.charAt(0)) {
+        minThreshold = Math.max(minThreshold, 0.85);
+    }
+
         int maxLength = Math.max(len1, len2);
 
         double maxPossibleSim = 1.0 - ((double) Math.abs(len1 - len2) / maxLength);
