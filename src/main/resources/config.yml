@@ -206,7 +206,7 @@ expressive-words:
   # Russian (Translit)
   - "pizda"
   - "pizdec"
-  - "blyad"
+  - "blyadb"
   - "nahuy"
   - "pohuy"
   # English
@@ -222,8 +222,6 @@ ad-words:
   - "playerok"
   - "aternos"
   - "minehut"
-  - "dot"
-  - "tochka"
   - "reallyworld"
   - "dexland"
   - "funtime" 
@@ -238,19 +236,13 @@ ad-words:
 
 # 5. Social networks and other
 social:
-  - "discord"
   - "disgd"
   - "dsgg"
-  - "telegram"
+  - "tgme"
   - "vkcom"
   - "vkme"
-  - "youtube"
-  - "twitch"
-  - "tiktok"
 
-# 6. White-List
 allowed-words:
-  # Russian (Translit)
   - "zdarova"
   - "zdorov"
   - "zdorova"
@@ -274,7 +266,6 @@ allowed-words:
   - "komandu"
   - "rebyata"
   - "rebenok"
-  # English
   - "fact"
   - "who"
   - "whom"
@@ -295,13 +286,83 @@ allowed-words:
   - "retardant"
   - "retarder"
   - "dickens"
-  - "speed"   
+  - "sped"
   - "crystal"
   - "method"
   - "department"
   - "nutmeg"
   - "oatmeal"
   - "welcome"
+  - "mebel"
+  - "trebovat"
+  - "nebo"
+  - "serebro"
+  - "nablyudat"
+  - "sablya"
+  - "opazdyvat"
+  - "mudry"
+  - "bermuda"
+  - "pedal"
+  - "torpedo"
+  - "vikipedia"
+  - "sukno"
+  - "barsuk"
+  - "shlyupa"
+  - "moroz"
+  - "mramor"
+  - "london"
+  - "matematika"
+  - "format"
+  - "avtomat"
+  - "aromat"
+  - "geroy"
+  - "narkoz"
+  - "metod"
+  - "shirt"
+  - "batch"
+  - "pitch"
+  - "ditch"
+  - "witch"
+  - "stich"
+  - "duck"
+  - "dock"
+  - "deck"
+  - "medic"
+  - "predict"
+  - "dictate"
+  - "focus"
+  - "factual"
+  - "clas"
+  - "glas"
+  - "gras"
+  - "pas"
+  - "mas"
+  - "asemble"
+  - "asist"
+  - "aset"
+  - "asume"
+  - "cucumber"
+  - "document"
+  - "acumulate"
+  - "county"
+  - "scunthorpe"
+  - "wed"
+  - "weding"
+  - "sweden"
+  - "shoe"
+  - "scrap"
+  - "scrape"
+  - "chore"
+  - "shore"
+  - "popcorn"
+  - "methane"
+  - "mathematics"
+  - "comand"
+  - "aple"
+  - "server"
+  - "helo"
+  - "suces"
+  - "mesage"
 
 adult-words:
   - "gashish"      
@@ -316,8 +377,7 @@ adult-words:
   - "methamfetamin"  
   - "amfetamin"     
   - "ekstazi"       
-  - "spays"         
-  - "sintetika"     
+  - "spays"            
   - "narkotik"       
   - "psylocybin"
   - "marki"                 
@@ -331,13 +391,11 @@ adult-words:
   - "methamphetamine"
   - "amphetamine"
   - "ecstasy"
-  - "mdma"
   - "molly"
   - "fentanyl"
   - "ketamine"
   - "shrooms"
   - "drugdealer"
-  - "overdose"
   - "narcotics"
   - "meth"
   - "klitor"        
@@ -412,8 +470,8 @@ priority:
   soc-media-dist: 6
   ad-dist: 7
 
-# If true, the plugin will don't apply any warn/censor/blocking etc. to the violators. Plugin will only log every violate. Needs if you don't trust the APVE system or if you too lazy to configure the config.
-# This mode is incompatible with every action. Consequently, if you enable this mode with another auctions, A.P.V.E's work will aborted.
+# If true, the plugin will don't apply any warn/censor/blocking etc. to the violators. Plugin will only log every violate. 
+# This mode is incompatible with punishments and warns. Consequently, if you enable this mode with another auctions, A.P.V.E's work will aborted.
 audit-mode: false
 
 warns:
@@ -436,40 +494,40 @@ insult:
   is-enabled: true
   punishment-is-enabled: true
   duration: "30m"
-  reason: "&cYou have been punished due to insulting."
+  reason: "&cYou have been muted due to insulting."
   type: "mute"
   blocking-reason: "&cYour message was blocked because it contains insults."
-  blocking: false
+  blocking: true
   censor-reason: "&cYour message was censored because it contains insults."
-  censor: true
+  censor: false
 
 family-insult:
   is-enabled: true
   punishment-is-enabled: true
   duration: "8h"
-  reason: "&cYou have been punished due to insulting relatives."
+  reason: "&cYou have been muted due to insulting relatives."
   type: "mute"
   blocking-reason: "&cYour message was blocked because it contains family insults."
-  blocking: false
+  blocking: true
   censor-reason: "&cYour message was censored because it contains family insults."
-  censor: true
+  censor: false
 
 ad-dist:
   is-enabled: true
   punishment-is-enabled: true
-  duration: "24h"
-  reason: "&cYou have been punished due to distribution of advertisement."
+  duration: "perm"
+  reason: "&cYou have been banned from the server due to distribution of advertisement."
   type: "banip"
   blocking-reason: "&cYour message was blocked because it contains advertisement distribution."
-  blocking: false
+  blocking: true
   censor-reason: "&cYour message was censored because it contains advertisement distribution."
-  censor: true
+  censor: false
 
 soc-media-dist:
   is-enabled: true
   punishment-is-enabled: true
   duration: "180m"
-  reason: "&cYou have been punished due to social media distribution."
+  reason: "&cYou have been banned from the server due to social media distribution."
   type: "ban"
   blocking-reason: "&cYour message was blocked because it contains social media distribution."
   blocking: true
@@ -481,7 +539,7 @@ adult-content:
   punishment-is-enabled: true 
   type: "mute"
   duration: "8h"
-  reason: "&cYou have been punished due to 18+ content (drugs / sexual)."
+  reason: "&cYou have been muted due to 18+ content mention."
   blocking-reason: "&cYour message was blocked because it contains adult (18+) content."
   blocking: true
   censor-reason: "&cYour message was censored because it contains adult (18+) content."
@@ -494,8 +552,8 @@ spam:
   time-window-seconds: 60
   similarity-threshold: 0.75
   type: "mute"
-  duration: "30m"
-  reason: "&cYou have been punished due to spam."
+  duration: "20m"
+  reason: "&cYou have been muted due to spam."
   blocking-reason: "&cYour message was blocked because it is a spam."
   blocking: false
 
@@ -506,10 +564,10 @@ caps:
   min-caps-percentage: 70
   type: "mute"
   duration: "15m"
-  reason: "&cYou have been punished due to excessive caps."
-  blocking-reason: "&cYour message was blocked because it is wrotten in upper case."
+  reason: "&cYou have been muted due to excessive caps."
+  blocking-reason: "&cYour message was blocked because it is written in upper case."
   blocking: false
-  censor-reason: "&cYour message was censored because it is wrotten in upper case."
+  censor-reason: "&cYour message was censored because it is written in upper case."
   censor: false
 
 intercepted-commands:
@@ -537,9 +595,7 @@ blocked-domains:
   - "top"
   - "me"
   - "fun"
-  - "info"
-  - "shop"
-  - "store"
+
 
 command-msg:
   perm-fail: "&cAccess denied."
