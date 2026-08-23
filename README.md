@@ -73,3 +73,6 @@ A Minecraft server plugin designed to keep your chat clean at all times without 
 
 ## 📄 License / Лицензия
 Distributed under the **GPLv3 License**. / Распространяется по лицензии **GPLv3**.
+
+## Official channel of a creator in a youtube — @BlackGeyer2000 (oriented for Russian auditory) 
+/ You can see advanced information about in it.
