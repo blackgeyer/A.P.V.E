@@ -75,6 +75,36 @@ public class TextNormalizer {
         return str.trim();
     }
 
+    public static String normalizeForDomain(String input) {
+        if (input == null || input.trim().isEmpty()) return "";
+
+        String str = MINECRAFT_COLOR_PATTERN.matcher(input).replaceAll("");
+        str = INVISIBLE_CHARS_PATTERN.matcher(str).replaceAll("");
+        str = str.toLowerCase(Locale.ROOT);
+
+        str = str.replaceAll("(\\(dot\\)|\\[dot\\]|\\{dot\\}|\\bdot\\b)", ".");
+        
+        str = str.replaceAll("\\s*\\.\\s*", ".");
+
+        return str;
+    }
+
+    public static String removeSpaces(String normalized) {
+        return normalized == null ? "" : normalized.replace(" ", "");
+    }
+
+    public static int[] createSpaceMapping(String normalized) {
+        if (normalized == null) return new int[0];
+        int[] map = new int[normalized.replace(" ", "").length()];
+        int compIdx = 0;
+        for (int i = 0; i < normalized.length(); i++) {
+            if (normalized.charAt(i) != ' ') {
+                map[compIdx++] = i;
+            }
+        }
+        return map;
+    }
+
     private static String collapseDuplicates(String text) {
         if (text == null || text.isEmpty()) return "";
 
