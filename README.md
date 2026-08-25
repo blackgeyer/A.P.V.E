@@ -1,6 +1,6 @@
 # Autonomous Potential Violation Eradicator (A.P.V.E)
 
-> **Author / Автор:** blackgeyer/blackgeier | **Version / Версия:** 1.2.51 | **License / Лицензия:** GPLv3
+> **Author / Автор:** blackgeyer/blackgeier | **Version / Версия:** 1.2.6 | **License / Лицензия:** GPLv3
 
 ---
 
