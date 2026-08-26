@@ -13,16 +13,16 @@ public class FoolProof {
     public static final String[] LATINIC_KEYS = {
             "insult-words", "family-insult-words", "family-roots",
             "bad-roots", "expressive-words", "ad-words",
-            "allowed-words", "adult-words", "adult-roots", "social"
+            "allowed-words", "adult-words", "adult-roots", "social", "staff-tituls"
     };
 
     public static final String[] CATEGORIES = {
-            "insult", "family-insult", "ad-dist", "soc-media-dist", "adult-content", "spam", "caps"
+            "insult", "family-insult", "ad-dist", "soc-media-dist", "adult-content", "spam", "caps", "staff-insult"
     };
 
     private static final String STRICT_LATIN_PATTERN = "^[a-z]+$";
     private static final Pattern DURATION_PATTERN = Pattern.compile("^(\\d+(s|m|h|d|w|mo|y))+$", Pattern.CASE_INSENSITIVE);
-    public static final Set<String> PUNISHMENT_TYPE = Set.of("mute", "ban", "banip", "none", "warn", "kick");
+    public static final Set<String> PUNISHMENT_TYPE = Set.of("mute", "ban", "banip", "none", "kick");
 
     public FoolProof(YamlConfiguration config) {
         this.config = config;
@@ -55,6 +55,8 @@ public class FoolProof {
         boolean warnsEnabled = config.getBoolean("warns.warns-is-enabled", false);
         boolean punEnabled = config.getBoolean("punishments.punishments-is-enabled", false);
         boolean auditEnabled = config.getBoolean("audit-mode", false);
+
+
         if (warnsEnabled && !punEnabled) {
             warnings.add("Warns are enabled but punishments are disabled. Proper plugin operation is not guaranteed.");
         }
@@ -194,9 +196,9 @@ public class FoolProof {
 
     private void validateWarns(List<ConfigError> errors, Set<String> permKeywords) {
         checkBool("warns.warns-is-enabled", errors, 3);
-        checkBool("warns.warn-limit-is-enabled", errors, 2);
-        checkBool("warns.warn_reset_when_server_restarts", errors, 2);
-        checkBool("warns.temporary-warns", errors, 2);
+        checkBool("warns.warn-limit-is-enabled", errors, 3);
+        checkBool("warns.warn_reset_when_server_restarts", errors, 3);
+        checkBool("warns.temporary-warns", errors, 3);
         
         checkIntMin("warns.warn-limit", 1, errors, 3);
         checkIntMin("warns.warn_reset_count", 1, errors, 2);
@@ -204,6 +206,11 @@ public class FoolProof {
         checkString("warns.warn-message", errors, 2);
         checkString("warns.last-warn-message", errors, 2);
         checkDuration("warns.warn-reset-time", errors, permKeywords, 3);
+    }
+    private void validateOther(List<ConfigError> errors, Set<String> permKeyWords) {
+        checkBool("audit-mode", errors, 3);
+        checkBool("console-log", errors, 3);
+        checkBool("notifies", errors, 3);
     }
 
     private void validateCategory(String cat, List<ConfigError> errors, Set<String> permKeywords) {
@@ -250,7 +257,8 @@ public class FoolProof {
         String[] msgPaths = {
             "command-msg.perm-fail", "command-msg.help-command-view-req", "command-msg.cfg-reload-msg",
             "command-msg.invalid-syntax", "command-msg.invalid-number", "command-msg.warns.no-warns",
-            "command-msg.warns.show", "command-msg.warns.removed", "command-msg.warns.cleared"
+            "command-msg.warns.show", "command-msg.warns.removed", "command-msg.warns.cleared",
+            "command-msg.violation-notify-msg", "command-msg.notify-activate-msg", "command-msg.notify-disabled-msg", "command-msg.player-only"
         };
         for (String path : msgPaths) checkString(path, errors, 1);
         

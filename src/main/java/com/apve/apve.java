@@ -22,6 +22,7 @@ import java.util.logging.SimpleFormatter;
 
 public class apve extends JavaPlugin implements Listener {
 
+    private NotificationManager notificationManager;
     private Logger suspiciousLogger;
     private Logger maliciousLogger;
     private PunishmentManager punishmentManager;
@@ -92,21 +93,26 @@ public class apve extends JavaPlugin implements Listener {
         setupSuspiciousLogger();
         setupMaliciousLogger();
 
+        this.notificationManager = new NotificationManager(this);
         this.punishmentManager = new PunishmentManager(this);
         getServer().getPluginManager().registerEvents(this, this);
 
-        NetworkChatInterceptor.register(this, punishmentManager, suspiciousLogger, maliciousLogger, result);
+        NetworkChatInterceptor.register(this, notificationManager, punishmentManager, suspiciousLogger, maliciousLogger, result);
 
         PacketEvents.getAPI().init();
 
-        getCommand("apve").setExecutor(new CommandManager(this));
-        getCommand("apve").setTabCompleter(new CommandManager(this));
+        CommandManager commandManager = new CommandManager(this);
+        getCommand("apve").setExecutor(commandManager);
+        getCommand("apve").setTabCompleter(commandManager);
 
         getLogger().info("Autonomous Potential Violation Eradicator [A.P.V.E] plugin has been successfully activated!");
         if (auditmode) {
-        getLogger().warning("A.P.V.E Started with enabled audit-mode, the actions to the violators will not apply.");
-
+            getLogger().warning("A.P.V.E Started with enabled audit-mode, actions to the violators will not apply.");
         }
+    }
+    
+    public NotificationManager getNotificationManager() {
+        return notificationManager;
     }
 
     @Override
@@ -154,7 +160,7 @@ public class apve extends JavaPlugin implements Listener {
                 for (FoolProof.ConfigError err : result.errors()) {
                     if (err.severity() == 3 && err.path() != null && defConfig != null && defConfig.contains(err.path())) {
                         getConfig().set(err.path(), defConfig.get(err.path()));
-                        getLogger().warning(String.format(" [Level %d] %s (Auto-fixed to default)", err.severity(), err.message()));
+                        getLogger().warning(String.format(" [Level %d] %s (May auto-fixed to default)", err.severity(), err.message()));
                     } else {
                         getLogger().warning(String.format(" [Level %d] %s", err.severity(), err.message()));
                     }
@@ -163,6 +169,10 @@ public class apve extends JavaPlugin implements Listener {
         }
 
         NetworkChatInterceptor.loadConfig(getConfig(), result);
+
+        if (notificationManager != null) {
+            notificationManager.loadMessages();
+        }
 
         sender.sendMessage("[APVE] Config reloaded successfully.");
         getLogger().info("Config reloaded successfully.");
@@ -232,10 +242,10 @@ public class apve extends JavaPlugin implements Listener {
         }
     }
 
-
     public Logger getSuspiciousLogger() {
         return suspiciousLogger;
     }
+
     private void setupMaliciousLogger() {
         maliciousLogger = Logger.getLogger("MaliciousChat");
         try {

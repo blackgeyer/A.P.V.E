@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -15,19 +16,49 @@ import java.util.UUID;
 
 public class CommandManager implements CommandExecutor, TabCompleter {
 
-    // Permission registration
     private static final String PERMISSION_RELOAD = "apve.reload";
     private static final String PERMISSION_SHOW = "apve.warns.show";
     private static final String PERMISSION_REMOVE = "apve.warns.remove";
     private static final String PERMISSION_CLEAR = "apve.warns.clear";
+    private static final String PERMISSION_NF_TOGGLE = "apve.notify.toggle";
 
     private final apve plugin;
 
+    private String permFailMSG;
+    private String reloadMsg;
+    private String warnShowMSG;
+    private String invalidSyntaxMSG;
+    private String noWarnsMSG;
+    private String removeWarnMSG;
+    private String clearWarnMSG;
+    private String invalidNumberMSG;
+    private String helpViewReqMSG;
+    private String notifyEnabledMSG;
+    private String notifyDisabledMSG;
+    private String playerOnlyMSG;
+    private List<String> helpMSG;
+
     public CommandManager(apve plugin) {
         this.plugin = plugin;
+        loadMessages();
     }
 
-    // ———— MAIN COMMAND HANDLER ———————————————————————
+    public void loadMessages() {
+        FileConfiguration config = plugin.getConfig();
+        this.permFailMSG = config.getString("command-msg.perm-fail");
+        this.reloadMsg = config.getString("command-msg.cfg-reload-msg");
+        this.warnShowMSG = config.getString("command-msg.warns.show");
+        this.invalidSyntaxMSG = config.getString("command-msg.invalid-syntax");
+        this.noWarnsMSG = config.getString("command-msg.warns.no-warns");
+        this.removeWarnMSG = config.getString("command-msg.warns.removed");
+        this.clearWarnMSG = config.getString("command-msg.warns.cleared");
+        this.invalidNumberMSG = config.getString("command-msg.invalid-number");
+        this.helpViewReqMSG = config.getString("command-msg.help-command-view-req");
+        this.notifyEnabledMSG = config.getString("command-msg.notify-activate-msg");
+        this.notifyDisabledMSG = config.getString("command-msg.notify-disabled-msg");
+        this.playerOnlyMSG = config.getString("command-msg.player-only");
+        this.helpMSG = config.getStringList("command-msg.help-command-msg");
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -36,32 +67,46 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        // Checking the command argument
         switch (args[0].toLowerCase()) {
             case "reload" -> handleReload(sender);
             case "warns"  -> handleWarns(sender, args);
             case "help"   -> sendHelp(sender);
+            case "notify" -> handleNotifiesToggle(sender);
             default       -> handleUnknownCommand(sender);
         }
 
         return true;
     }
 
-    // ─── HANDLERS ────────────────────────────────────────────────────────
-
-    // ————— RELOAD ARGUMENT HANDLER —————
-
     private void handleReload(CommandSender sender) {
         if (!sender.hasPermission(PERMISSION_RELOAD)) {
-            sendFormatted(sender, "command-msg.perm-fail");
+            send(sender, permFailMSG);
             return;
         }
 
-        sendFormatted(sender, "command-msg.cfg-reload-msg");
         plugin.performReload(sender);
+        loadMessages(); 
     }
 
-    // ———— WARNS ARGUMENT HANDLER ——————
+    private void handleNotifiesToggle(CommandSender sender) {
+        if (!(sender instanceof Player player)) {
+            send(sender, playerOnlyMSG);
+            return;
+        }
+
+        if (!player.hasPermission(PERMISSION_NF_TOGGLE)) {
+            send(sender, permFailMSG);
+            return;
+        }
+
+        boolean isNowEnabled = plugin.getNotificationManager().toggleNotifications(player.getUniqueId());
+
+        if (isNowEnabled) {
+            send(sender, notifyEnabledMSG);
+        } else {
+            send(sender, notifyDisabledMSG);
+        }
+    }
 
     private void handleWarns(CommandSender sender, String[] args) {
         if (args.length < 3) {
@@ -79,25 +124,25 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         switch (action) {
             case "show" -> {
                 if (!sender.hasPermission(PERMISSION_SHOW)) {
-                    sendFormatted(sender, "command-msg.perm-fail");
+                    send(sender, permFailMSG);
                     return;
                 }
                 
                 int count = NetworkChatInterceptor.getWarns(targetId);
                 String maxViolation = NetworkChatInterceptor.getHighestViolationType(targetId);
                 
-                sendFormatted(sender, "command-msg.warns.show", 
+                send(sender, warnShowMSG, 
                         "{player}", targetName, 
                         "{amount}", String.valueOf(count), 
                         "{violation}", maxViolation);
             }
             case "remove" -> {
                 if (!sender.hasPermission(PERMISSION_REMOVE)) {
-                    sendFormatted(sender, "command-msg.perm-fail");
+                    send(sender, permFailMSG);
                     return;
                 }
                 if (args.length < 4) {
-                    sendFormatted(sender, "command-msg.invalid-syntax", "{usage}", "/apve warns remove <nickname> <amount>");
+                    send(sender, invalidSyntaxMSG, "{usage}", "/apve warns remove <nickname> <amount>");
                     return;
                 }
                 try {
@@ -105,49 +150,46 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     int currentWarns = NetworkChatInterceptor.getWarns(targetId);
                     
                     if (currentWarns == 0) {
-                        sendFormatted(sender, "command-msg.warns.no-warns", "{player}", targetName);
+                        send(sender, noWarnsMSG, "{player}", targetName);
                         return;
                     }
                     
                     int leftover = NetworkChatInterceptor.removeWarns(targetId, amountToRemove);
                     
-                    sendFormatted(sender, "command-msg.warns.removed", 
+                    send(sender, removeWarnMSG, 
                             "{player}", targetName, 
                             "{amount}", String.valueOf(amountToRemove), 
                             "{left}", String.valueOf(leftover));
                             
                 } catch (NumberFormatException e) {
-                    sendFormatted(sender, "command-msg.invalid-number", "{arg}", args[3]);
+                    send(sender, invalidNumberMSG, "{arg}", args[3]);
                 }
             }
             case "clear" -> {
                 if (!sender.hasPermission(PERMISSION_CLEAR)) {
-                    sendFormatted(sender, "command-msg.perm-fail");
+                    send(sender, permFailMSG);
                     return;
                 }
                 NetworkChatInterceptor.clearWarns(targetId);
-                sendFormatted(sender, "command-msg.warns.cleared", "{player}", targetName);
+                send(sender, clearWarnMSG, "{player}", targetName);
             }
             default -> sendHelp(sender);
         }
     }
 
     private void handleUnknownCommand(CommandSender sender) {
-        sendFormatted(sender, "command-msg.help-command-view-req");
+        send(sender, helpViewReqMSG);
     }
 
     private void sendHelp(CommandSender sender) {
-        List<String> helpList = plugin.getConfig().getStringList("command-msg.help-command-msg");
-        if (helpList.isEmpty()) {
+        if (helpMSG == null || helpMSG.isEmpty()) {
             sender.sendMessage(ChatColor.RED + "Help section is missing in config.yml!");
             return;
         }
-        for (String line : helpList) {
+        for (String line : helpMSG) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
         }
     }
-
-    // ─── TAB COMPLETE ─────────────────────────────────────────────────────
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -160,6 +202,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 sender.hasPermission(PERMISSION_CLEAR)) {
                 completions.add("warns");
             }
+            if (sender.hasPermission(PERMISSION_NF_TOGGLE)) completions.add("notify");
             completions.add("help");
             return filterPrefix(completions, args[0]);
         }
@@ -168,6 +211,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             if (sender.hasPermission(PERMISSION_SHOW)) completions.add("show");
             if (sender.hasPermission(PERMISSION_REMOVE)) completions.add("remove");
             if (sender.hasPermission(PERMISSION_CLEAR)) completions.add("clear");
+            return filterPrefix(completions, args[1]);
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("notify")) {
+            if (sender.hasPermission(PERMISSION_NF_TOGGLE)) completions.add("toggle");
             return filterPrefix(completions, args[1]);
         }
 
@@ -181,18 +229,17 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         return List.of();
     }
 
+    private void send(CommandSender sender, String template, String... replacements) {
+        if (template == null || template.isEmpty()) return;
 
-
-    private void sendFormatted(CommandSender sender, String path, String... replacements) {
-        String msg = plugin.getConfig().getString(path, "&cMissing config string: " + path);
-        
+        String formatted = template;
         for (int i = 0; i < replacements.length; i += 2) {
             if (i + 1 < replacements.length) {
-                msg = msg.replace(replacements[i], replacements[i + 1]);
+                formatted = formatted.replace(replacements[i], replacements[i + 1]);
             }
         }
         
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', formatted));
     }
 
     private List<String> filterPrefix(List<String> list, String prefix) {
