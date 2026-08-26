@@ -446,6 +446,20 @@ adult-roots:
   - "cumshot"
   - "gangbang"
 
+# Staff tituls. Needs to detect staff insult. If an insult word appears in a message alongside any staff title, APVE will detect it as staff insult.
+staff-tituls:
+  - "admin"
+  - "helper"
+  - "sozdatel"
+  - "vladelec"
+  - "kurator"
+  - "curator"
+  - "staff"
+  - "moderator"
+  - "moder"
+
+
+
 punishments:
   mute-command: "mute %player% %duration% %reason%"
   ban-command: "ban %player% %duration% %reason%"
@@ -467,18 +481,27 @@ priority:
   insult: 3
   adult-content: 4
   family-insult: 5
-  soc-media-dist: 6
-  ad-dist: 7
+  staff-insult: 6
+  soc-media-dist: 7
+  ad-dist: 8
 
-# If true, the plugin will don't apply any warn/censor/blocking etc. to the violators. Plugin will only log every violate. 
+# If true, the plugin will not apply any warn/censor/blocking etc. to the violators. Plugin will only log every violate. 
 # This mode is incompatible with punishments and warns. Consequently, if you enable this mode with another auctions, A.P.V.E's work will aborted.
 audit-mode: false
+
+# If false, APVE will not send messages about player's violations to the console.
+console-log: false
+
+# If true, APVE will send notifies about player's violations in game to the player's, which has apve.violation.notify permission.
+notifies: true
+
+
 
 warns:
   warn-limit: 2
   warn-limit-is-enabled: true
   warn-message: |
-      &cYour message has been censored due to rule-violating words/meanings in it
+      &cYou have been warned by A.P.V.E. due to rule violating.
       &cPlease, communicate in the chat without any rules-violating words/meanings.
   last-warn-message: |
       &cThis is last warn. Don't write the rule-violating message.
@@ -544,13 +567,24 @@ adult-content:
   blocking: true
   censor-reason: "&cYour message was censored because it contains adult (18+) content."
   censor: false
+
+staff-insult:
+  is-enabled: true
+  punishment-is-enabled: true
+  type: "mute"
+  duration: "12h"
+  reason: "&cYou have been muted due to staff insulting."
+  blocking-reason: "&cYour message was blocked because it contains staff insulting."
+  blocking: true
+  censor-reason: "&cYour message was censored because it contains staff insulting"
+  censor: false
       
 spam:
   is-enabled: true
   punishment-is-enabled: true
   max-similar-messages: 3
   time-window-seconds: 60
-  similarity-threshold: 0.75
+  similarity-threshold: 0.90
   type: "mute"
   duration: "20m"
   reason: "&cYou have been muted due to spam."
@@ -606,10 +640,16 @@ command-msg:
     - "&2/apve warns show <nickname> — View the player's warns history"
     - "&2/apve warns remove <nickname> <integer> — Remove the player's warns. The removing warns equals <integer> argument."
     - "&2/apve warns clear <nickname> — Remove all the player's warns."
+    - "&2/apve notify toggle — Toggles notifies about player's violations."
 
   cfg-reload-msg: "&1Reloading configuration..."
   invalid-syntax: "&cInvalid syntax. Usage: {usage}"
   invalid-number: "&cArgument '{arg}' must be a valid number."
+
+  violation-notify-msg: "&cNOTIFY: Player &e{player} &chas sended message with &f{message} &cwhich violates the &4{type} &cdue to its similarity/equality to &e{word}."
+  notify-activate-msg: "&aSucessfully &2enabled &anotifies about the player's violations."
+  notify-disabled-msg: "&aSucessfully &4disabled &anotifies about the player's violations."
+  player-only: "&cExecutor must be a player."
   
   warns:
     no-warns: "&ePlayer {player} currently has no active warns."

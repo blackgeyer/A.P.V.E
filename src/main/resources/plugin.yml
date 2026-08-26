@@ -1,5 +1,5 @@
 name: APVE
-version: 1.2.6
+version: 1.3.0
 main: org.apve.apve
 api-version: '1.20.5'
 authors: [blackgeyer/blackgeier]
@@ -9,29 +9,73 @@ depend:
 commands:
   apve:
     description: APVE management
-    usage: /apve <reload|warns>
+    usage: /apve <reload | warns | notify>
     permission: apve.use
 
 permissions:
   apve.reload:
-    description: Allows reloading APVE config
+    description: Allows to use /apve reload command
     default: op
 
   apve.warns.show:
-    description: View the player's warns count
+    description: Allows to use /apve warns show {player} command
     default: op
 
   apve.warns.remove:
-    description: Allows remove player's warns
+    description: Allows to use /apve warns remove {player} {integer} command
     default: op
 
   apve.warns.clear:
-    description: Allows clear player's warns
+    description: Allows to use /apve warns clear {player} command
     default: op
 
   apve.help:
-    description: Allows to use apve help command
+    description: Allows to use /apve help command
     default: op
+
+  apve.notify.toggle:
+    description: Toggles the violation notifies
+    default: op
+
+   
+  apve.violation.notify:
+    description: Allows view notifies about player's violations in the game chat. (DYNAMIC)
+    default: op
+
+  apve.insult.immune:
+    description: APVE will not apply any action to player with this permission if they insult someone.
+    default: op
+
+  apve.fam.insult.immune:
+    description: APVE will not apply any action to player with this permission if they insult someone's family.
+    default: false
+
+  apve.caps.immune:
+    description: APVE will not apply any action to player with this permission if they write messages fully in uppercase.
+    default: false
+
+  apve.spam.immune:
+    description: APVE will not apply any action to player with this permission if they spam.
+    default: false
+
+  apve.adult.content.immune:
+    description: APVE will not apply any action to player with this permission if they send messages with adult content.
+    default: false
+
+  apve.social.immune:
+    description: APVE will not apply any action to player with this permission if they distribute the social medias.
+    default: op
+
+  apve.advertisement.immune:
+    description: APVE will not apply any action to player with this permission if they distribute other resources.
+    default: op
+
+  apve.staff.insult.immune:
+    description: APVE will not apply any action to player with this permission if they insult staff.
+    default: false
+
+
+
 
 
 
