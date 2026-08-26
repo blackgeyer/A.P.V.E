@@ -1,6 +1,6 @@
 # Autonomous Potential Violation Eradicator (A.P.V.E)
 
-> **Author / Автор:** blackgeyer/blackgeier | **Version / Версия:** 1.2.6 | **License / Лицензия:** GPLv3
+> **Author / Автор:** blackgeyer/blackgeier | **Version / Версия:** 1.3.0 | **License / Лицензия:** GPLv3
 
 ---
 
@@ -13,6 +13,7 @@ A Minecraft server plugin designed to keep your chat clean at all times without 
 * Automatic chat filtering and offline punishment issuance.
 * Flexible configurations for punishment duration, toggles, and banned words in `config.yml`.
 * Built-in text normalizer to handle chat bypasses.
+* Helping to human moderators.
 * Target audience: English and Russian-speaking communities.
 
 ### 🛠 Installation
@@ -35,6 +36,7 @@ A Minecraft server plugin designed to keep your chat clean at all times without 
 * **/apve warns remove {nickname} {integer}** —— Removes a certain warns amount of a {player}. The removing warns amount equals the integer argument. Needs `apve.warns.remove` permission to execute (default: op)
 * **/apve warns clear {nickname}** —— Clears all warn amount of the player. Needs `apve.warns.clear` permission to execute (default: op).
 * **/apve help** —— Shows the available APVE commands and its description. Needs `apve.help` permission to execute. (default: op)
+* **/apve notify toggle** —— Toggles notifies about the player's violations. Needs `apve.notify.toggle` permission to execute. (default: op)
 
 ---
 
@@ -46,6 +48,7 @@ A Minecraft server plugin designed to keep your chat clean at all times without 
 * Автоматическая фильтрация чата и оффлайн-выдача наказаний.
 * Гибкая настройка длительности, типов наказаний и запрещенных слов через `config.yml`.
 * Встроенный нормализатор текста для предотвращения обхода фильтров.
+* Помощь человеческой модерации
 * Создан для русскоязычной и англоязычной аудитории.
 
 ### 🛠 Установка
@@ -68,6 +71,7 @@ A Minecraft server plugin designed to keep your chat clean at all times without 
 * **/apve warns remove {nickname} {integer}** —— Удаляет определённое количество предупреждений {player}. Удаляемое число предупреждении равна аргументу целого числа. Нужно `apve.warns.remove` право чтобы осуществлять (default: op).
 * **/apve warns clear {nickname}** —— Очищает все предупреждения игрока. Нужно `apve.warns.clear` право чтобы осуществлять (default: op).
 * **/apve help** —— Шоус доступные команды и их описание. Нужно `apve.help` право чтобы осуществлять (default: op)
+* **/apve notify toggle** —— Переключает уведомлении об нарушениях игроков. Нужно `apve.notify.toggle` право чтобы осуществлять (default: op).
 
 ---
 
