@@ -656,3 +656,22 @@ command-msg:
     show: "&aPlayer &e{player} &ahas &c{amount} &aactive warns. Highest violation rule: &c{violation}&a."
     removed: "&aSuccessfully removed &e{amount} &awarns from &e{player}&a. Remaining warns: &e{left}&a."
     cleared: "&aAll warns successfully cleared for &e{player}&a."
+
+  check:
+    header: "&8[&bA.P.V.E Word Checker&8]"
+    raw: "&7Input text: &f{raw}"
+    normalized: "&7Normalized text: {normalized}"
+    status: "&7Check status: {status_color}{status}"
+    matched-word: "&7Founded word: &e{word}"
+    dict-word: "&7From-dictionary sample: &6{dict}"
+    detail: "&7Check details: &b{detail}"
+    status-colors:
+      malicious: "&c"
+      suspicious: "&e"
+      none: "&a"
+
+
+
+
+
+  
