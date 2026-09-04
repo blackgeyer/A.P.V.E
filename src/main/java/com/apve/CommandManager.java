@@ -9,10 +9,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.command.ConsoleCommandSender;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
 
 public class CommandManager implements CommandExecutor, TabCompleter {
 
@@ -21,6 +28,8 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     private static final String PERMISSION_REMOVE = "apve.warns.remove";
     private static final String PERMISSION_CLEAR = "apve.warns.clear";
     private static final String PERMISSION_NF_TOGGLE = "apve.notify.toggle";
+    private static final String PERMISSION_CHECK = "apve.check";
+    private static final String PERMISSION_HELP = "apve.help";
 
     private final apve plugin;
 
@@ -37,6 +46,17 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     private String notifyDisabledMSG;
     private String playerOnlyMSG;
     private List<String> helpMSG;
+
+    private String checkHeaderMSG;
+    private String checkRawMSG;
+    private String checkNormalizedMSG;
+    private String checkStatusMSG;
+    private String checkWordMSG;
+    private String checkDictMSG;
+    private String checkDetailMSG;
+    private String checkColorMalicious;
+    private String checkColorSuspicious;
+    private String checkColorNone;
 
     public CommandManager(apve plugin) {
         this.plugin = plugin;
@@ -58,6 +78,18 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         this.notifyDisabledMSG = config.getString("command-msg.notify-disabled-msg");
         this.playerOnlyMSG = config.getString("command-msg.player-only");
         this.helpMSG = config.getStringList("command-msg.help-command-msg");
+
+        this.checkHeaderMSG = config.getString("command-msg.check.header");
+        this.checkRawMSG = config.getString("command-msg.check.raw");
+        this.checkNormalizedMSG = config.getString("command-msg.check.normalized");
+        this.checkStatusMSG = config.getString("command-msg.check.status");
+        this.checkWordMSG = config.getString("command-msg.check.matched-word");
+        this.checkDictMSG = config.getString("command-msg.check.dict-word");
+        this.checkDetailMSG = config.getString("command-msg.check.detail");
+        this.checkColorMalicious = config.getString("command-msg.check.status-colors.malicious");
+        this.checkColorSuspicious = config.getString("command-msg.check.status-colors.suspicious");
+        this.checkColorNone = config.getString("command-msg.check.status-colors.none");
+    
     }
 
     @Override
@@ -72,6 +104,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             case "warns"  -> handleWarns(sender, args);
             case "help"   -> sendHelp(sender);
             case "notify" -> handleNotifiesToggle(sender);
+            case "check"  -> handleCheck(sender, args);
             default       -> handleUnknownCommand(sender);
         }
 
@@ -107,6 +140,58 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             send(sender, notifyDisabledMSG);
         }
     }
+
+    private void handleCheck(CommandSender sender, String[] args) {
+    if (!sender.hasPermission(PERMISSION_CHECK)) {
+        send(sender, permFailMSG);
+        return;
+    }
+
+    if (args.length < 2) {
+        send(sender, invalidSyntaxMSG, "{usage}", "/apve check {String}");
+        return;
+    }
+
+    String rawText = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+    NetworkChatInterceptor.InspectionResult result = NetworkChatInterceptor.inspect(rawText);
+    String status = result.violationType();
+
+    if (sender instanceof ConsoleCommandSender) {
+        String normDisplay = result.normalizedText().isEmpty() ? "[empty]" : result.normalizedText();
+
+        plugin.getLogger().info("=== A.P.V.E. Inspection ===");
+        plugin.getLogger().info("Input text: " + result.rawText());
+        plugin.getLogger().info("Normalized text: " + normDisplay);
+        plugin.getLogger().info("Check status: " + status);
+
+        if (!"NONE".equals(status)) {
+            plugin.getLogger().info("Matched word: " + result.matchedInputWord());
+            plugin.getLogger().info("Dictionary sample: " + result.matchedDictWord());
+            plugin.getLogger().info("Details: " + result.detail());
+        }
+        return;
+    }
+
+    String statusColor = switch (status) {
+        case "MALICIOUS" -> checkColorMalicious;
+        case "SUSPICIOUS" -> checkColorSuspicious;
+        default -> checkColorNone;
+    };
+
+    String normDisplay = result.normalizedText().isEmpty() ? "&c[empty]" : "&a" + result.normalizedText();
+
+    send(sender, checkHeaderMSG);
+    send(sender, checkRawMSG, "{raw}", result.rawText());
+    send(sender, checkNormalizedMSG, "{normalized}", normDisplay);
+    send(sender, checkStatusMSG, "{status_color}", statusColor, "{status}", status);
+
+    if (!"NONE".equals(status)) {
+        send(sender, checkWordMSG, "{word}", result.matchedInputWord());
+        send(sender, checkDictMSG, "{dict}", result.matchedDictWord());
+        send(sender, checkDetailMSG, "{detail}", result.detail());
+    }
+}
+   
 
     private void handleWarns(CommandSender sender, String[] args) {
         if (args.length < 3) {
@@ -182,10 +267,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelp(CommandSender sender) {
-        if (helpMSG == null || helpMSG.isEmpty()) {
-            sender.sendMessage(ChatColor.RED + "Help section is missing in config.yml!");
+        if (!sender.hasPermission(PERMISSION_HELP)) {
+            send(sender, permFailMSG);
             return;
         }
+
         for (String line : helpMSG) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', line));
         }
@@ -203,6 +289,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                 completions.add("warns");
             }
             if (sender.hasPermission(PERMISSION_NF_TOGGLE)) completions.add("notify");
+            if (sender.hasPermission(PERMISSION_CHECK)) completions.add("check");
             completions.add("help");
             return filterPrefix(completions, args[0]);
         }
