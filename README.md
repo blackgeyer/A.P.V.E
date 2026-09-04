@@ -1,6 +1,6 @@
 # Autonomous Potential Violation Eradicator (A.P.V.E)
 
-> **Author / Автор:** blackgeyer/blackgeier | **Version / Версия:** 1.3.0 | **License / Лицензия:** GPLv3
+> **Author / Автор:** blackgeyer/blackgeier | **Version / Версия:** 1.3.1 | **License / Лицензия:** GPLv3
 
 ---
 
@@ -37,6 +37,7 @@ A Minecraft server plugin designed to keep your chat clean at all times without 
 * **/apve warns clear {nickname}** —— Clears all warn amount of the player. Needs `apve.warns.clear` permission to execute (default: op).
 * **/apve help** —— Shows the available APVE commands and its description. Needs `apve.help` permission to execute. (default: op)
 * **/apve notify toggle** —— Toggles notifies about the player's violations. Needs `apve.notify.toggle` permission to execute. (default: op)
+* **/apve check {String}** —— Checks and normalizes the string for its legality by A.P.V.E. Needs `apve.check` permission to execute. (default: op)
 
 ---
 
@@ -72,6 +73,8 @@ A Minecraft server plugin designed to keep your chat clean at all times without 
 * **/apve warns clear {nickname}** —— Очищает все предупреждения игрока. Нужно `apve.warns.clear` право чтобы осуществлять (default: op).
 * **/apve help** —— Шоус доступные команды и их описание. Нужно `apve.help` право чтобы осуществлять (default: op)
 * **/apve notify toggle** —— Переключает уведомлении об нарушениях игроков. Нужно `apve.notify.toggle` право чтобы осуществлять (default: op).
+* **/apve check {String}** —— Проверяет и нормализует строку на легальность со стороны A.P.V.E. Нужно `apve.check` право чтобы осуществлять. (default: op)
+
 
 ---
 
