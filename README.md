@@ -26,7 +26,7 @@ High-performance, fully asynchronous Minecraft chat moderation plugin. Designed 
 
 ### ⚙️ Technical Compatibility
 * **Cores:** Paper, Purpur, Spigot etc. any normal bukkit-based core.
-* **Minecraft Versions:** 1.20.5 – 1.21.x+ *(Recommended: 1.21.4+)*
+* **Minecraft Versions:** 1.20.5 – 26.x+ 
 * **Java:** 21
 
 ### ⚠️ Important Usage Notes
@@ -64,7 +64,7 @@ High-performance, fully asynchronous Minecraft chat moderation plugin. Designed 
 
 ### ⚙️ Совместимость
 * **Ядра:** Paper, Purpur, Spigot или любое другое ядро, основанное на Bukkit.
-* **Версии Minecraft:** от 1.20.5 до 1.21.x+ *(Рекомендуемая: 1.21.4+)*
+* **Версии Minecraft:** от 1.20.5 до 26.x+
 * **Java:** 21
 
 ### ⚠️ Важные предупреждения
