@@ -1,4 +1,4 @@
-# Autonomous Potential Violation Eradicator (A.P.V.E)
+# Autonomous Potential Violation Eradicator (APVE)
 
 ![License](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![API](https://img.shields.io/badge/Dependency-PacketEvents-orange.svg)
