@@ -10,10 +10,10 @@
 
 ## 🇬🇧 English
 
-High-performance, fully asynchronous Minecraft chat moderation plugin. Designed to keep your server chat clean with zero main-thread overhead. Powered by **PacketEvents** and **Aho-Corasick** pattern matching.
+High-performance, fully asynchronous Minecraft chat moderation plugin. Designed to keep your server chat clean with zero main-thread overhead. Powered by **PacketEvents**, **Aho-Corasick** pattern matching, and an intelligent **Fuzzy Matching** fallback system.
 
 ### 🚀 Key Features & Architecture
-* **$O(N)$ Performance:** Uses Aho-Corasick string matching instead of heavy Regex, allowing instant processing of massive text streams.
+* **Hybrid Search Engine ($O(N)$ + Fuzzy Fallback):** Utilizes lightning-fast Aho-Corasick string matching for exact dictionary lookups. If a word does not yield a 100% exact match, the engine automatically engages **Fuzzy Matching** to calculate similarity thresholds against blacklisted patterns, efficiently catching typos, subtle bypasses, and deliberate misspellings.
 * **100% Asynchronous Netty Interception:** Intercepts and drops chat packets at the network layer before they reach the server's main thread.
 * **Smart Text Normalization:** Strips homoglyphs, obfuscated characters, and leetspeak bypasses automatically.
 * **Offline Punishment Pipeline:** Issues warnings and executes configurable punishment commands automatically.
@@ -30,7 +30,7 @@ High-performance, fully asynchronous Minecraft chat moderation plugin. Designed 
 * **Java:** 21
 
 ### ⚠️ Important Usage Notes
-* Configure `config.yml` before deploying to production to set up punishment command templates and avoid false positives.
+* Configure `config.yml` before deploying to production to set up punishment command templates, fuzzy tolerance levels, and avoid false positives.
 * Due to the internal normalization pipeline, all banned word patterns in `config.yml` must be entered using **Latin characters only** (e.g., use `shlyuha` instead of `шлюха`). Refer to `documentation.txt` for details.
 
 ### 💻 Commands & Permissions
@@ -48,10 +48,10 @@ High-performance, fully asynchronous Minecraft chat moderation plugin. Designed 
 
 ## 🇷🇺 Русский
 
-Высокопроизводительный асинхронный плагин модерации чата. Поддерживает чистоту сервера в автоматическом режиме с нулевой нагрузкой на главный поток сервера. Работает на базе **PacketEvents** и алгоритма **Aho-Corasick**.
+Высокопроизводительный асинхронный плагин модерации чата. Поддерживает чистоту сервера в автоматическом режиме с нулевой нагрузкой на главный поток сервера. Работает на базе **PacketEvents**, алгоритма **Aho-Corasick** и интеллектуальной системы **Fuzzy Matching**.
 
 ### 🚀 Архитектурные преимущества
-* **Скорость работы $O(N)$:** Использование алгоритма Ахо-Корасик вместо тяжелых регулярных выражений (Regex) обеспечивает мгновенный поиск совпадений.
+* **Гибридный движок поиска ($O(N)$ + Fuzzy Matching):** Использует алгоритм Ахо-Корасик для 100% точного и мгновенного поиска совпадений по словарю. Если слово не совпадает на все 100% идентично паттернам, автоматически включается **Fuzzy Matching** (нечёткое сравнение), которое сопоставляет схожесть слова с имеющимися шаблонами в словаре, предотвращая обходы через опечатки, лишние буквы и намеренные искажения.
 * **Асинхронный перехват Netty:** Фильтрация и сброс запрещённых пакетов происходят на сетевом уровне до их обработки главным потоком сервера.
 * **Встроенный нормализатор:** Автоматически нейтрализует обходы через замену букв (символы-омоглифы, цифры, спецсимволы).
 * **Автоматические оффлайн-наказания:** Автоматический учёт предупреждений и исполнение команд блокировки.
@@ -68,7 +68,7 @@ High-performance, fully asynchronous Minecraft chat moderation plugin. Designed 
 * **Java:** 21
 
 ### ⚠️ Важные предупреждения
-* Перед запуском настройте `config.yml` и шаблоны команд наказаний, чтобы исключить ложные срабатывания.
+* Перед запуском настройте `config.yml` и шаблоны команд наказаний, чтобы настроить чувствительность нечёткого поиска и исключить ложные срабатывания.
 * Из-за работы нормализатора все паттерны запрещённых слов в `config.yml` вносятся **строго латиницей** (пример: `шлюха` -> `shlyuha`). Подробный разбор — в `documentation.txt`.
 
 ### 💻 Команды и права
