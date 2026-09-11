@@ -2,7 +2,7 @@
   AUTONOMOUS POTENTIAL VIOLATION ERADICATOR (A.P.V.E.)
 ==============================================================================
 
-Copyright (C) 2026 [48h_48m_48s]
+Copyright (C) 2026 [blackgeyer/blackgaier]
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
